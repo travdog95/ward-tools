@@ -1,0 +1,29 @@
+GET http://localhost:5000/api/users
+
+###
+POST http://localhost:5000/api/users/
+content-type: application/json
+
+{
+    "firstName": "Travis",
+    "lastName": "Peters"
+}
+
+###
+PUT http://localhost:5000/api/users/630ff3af02b00d68f359803b
+content-type: application/json
+
+{
+    "lastName": "Peterson"
+}
+
+###
+PATCH http://localhost:5000/api/users/630ff3af02b00d68f359803b
+content-type: application/json
+
+{
+    "lastName": "Peters"
+}
+
+###
+DELETE http://localhost:5000/api/users/630ff3e102b00d68f3598041
