@@ -5,25 +5,23 @@ POST http://localhost:5000/api/users/
 content-type: application/json
 
 {
-    "firstName": "Travis",
-    "lastName": "Peters"
+    "name": "Kimmo",
+    "email": "kim@tkopeters.com",
+    "password": "asdf"
 }
 
 ###
-PUT http://localhost:5000/api/users/630ff3af02b00d68f359803b
+POST http://localhost:5000/api/users/login
 content-type: application/json
 
 {
-    "lastName": "Peterson"
+    "email": "travis@tkopeters.com",
+    "password": "asdf"
 }
 
 ###
-PATCH http://localhost:5000/api/users/630ff3af02b00d68f359803b
-content-type: application/json
+GET http://localhost:5000/api/users/me
 
-{
-    "lastName": "Peters"
-}
 
 ###
 DELETE http://localhost:5000/api/users/630ff3e102b00d68f3598041

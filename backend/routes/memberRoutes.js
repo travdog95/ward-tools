@@ -7,13 +7,18 @@ const {
   patchMember,
   deleteMember,
 } = require("../controllers/memberController");
+const { protect } = require("../middleware/authMiddleware");
 
-router.route("/").get(getMembers).post(addMember);
+router.route("/").get(protect, getMembers).post(protect, addMember);
 // router.get("/", getMembers);
 
 // router.post("/", addMember);
 
-router.route("/:id").put(updateMember).patch(patchMember).delete(deleteMember);
+router
+  .route("/:id")
+  .put(protect, updateMember)
+  .patch(protect, patchMember)
+  .delete(protect, deleteMember);
 
 // router.put("/:id", updateMember);
 
