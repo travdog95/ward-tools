@@ -135,7 +135,7 @@ h3 {
   margin: 0 0 5px 3px;
 }
 
-.btn {
+.btn, input::file-selector-button {
   padding: 10px 20px;
   border: 1px solid #000;
   border-radius: 5px;
@@ -151,6 +151,13 @@ h3 {
   justify-content: center;
 }
 
+input::file-selector-button {
+  display: inline-block
+}
+
+input[type="file"] {
+  font-size: 1.2rem;
+}
 .btn svg {
   margin-right: 8px;
 }
@@ -165,7 +172,7 @@ h3 {
   margin-bottom: 20px;
 }
 
-.btn:hover {
+.btn:hover, input::file-selector-button:hover {
   transform: scale(0.98);
 }
 

@@ -4,15 +4,14 @@ import axios from "axios";
 const API_URL = "/api/files/";
 
 //Upload file
-const uploadFile = async (formData, config) => {
-  console.log("filesService");
+const upload = async (formData, config) => {
   const response = await axios.post(API_URL, formData, config);
 
   return response.data;
 };
 
-const filesService = {
-  uploadFile,
+const fileManagementService = {
+  upload,
 };
 
-export default filesService;
+export default fileManagementService;

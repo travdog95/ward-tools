@@ -1,13 +1,31 @@
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { uploadFile } from "../features/files/filesSlice";
-import axios from "axios";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+// import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { uploadFile, reset } from "../features/fileManagement/fileManagementSlice";
+import Spinner from "../components/Spinner";
 
 const FileUpload = () => {
   const [selectedFile, setSelectedFile] = useState(null);
-  const dispatch = useDispatch();
 
-  // const messageRef = useRef();
+  const dispatch = useDispatch();
+  // const naviagate = useNavigate();
+
+  const { file, isLoading, isError, isSuccess, message } = useSelector(
+    (state) => state.fileManagement
+  );
+
+  useEffect(() => {
+    if (isError) {
+      toast.error(message);
+    }
+
+    if (isSuccess) {
+      toast.success(message);
+    }
+
+    dispatch(reset());
+  }, [file, isError, isSuccess, message, dispatch]);
 
   const handleFileChange = (event) => {
     // Update the state
@@ -30,10 +48,12 @@ const FileUpload = () => {
       },
     };
 
-    // dispatch(uploadFile(formData, config));
-    const response = await axios.post("http://localhost:5000/api/files", formData, config);
-    console.log("response", response.data);
+    dispatch(uploadFile(formData, config));
   };
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   const fileData = () => {
     if (selectedFile) {
@@ -63,6 +83,17 @@ const FileUpload = () => {
     }
   };
 
+  const uploadedFileData = () => {
+    if (file) {
+      return (
+        <div>
+          <h2>Uploaded File Details</h2>
+          <p>New File Name: {file.filename}</p>
+        </div>
+      );
+    }
+  };
+
   return (
     <div className="form">
       <form>
@@ -76,6 +107,7 @@ const FileUpload = () => {
           />
           {showButton()}
           {fileData()}
+          {uploadedFileData()}
         </div>
       </form>
     </div>

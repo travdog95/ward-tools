@@ -1,18 +1,20 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import filesService from "./filesService";
+import fileManagementService from "./fileManagementService";
 
 const initialState = {
+  file: null,
   isError: false,
   isSuccess: false,
   isLoading: false,
   message: "",
+  files: [],
 };
 
 export const uploadFile = createAsyncThunk(
   "files/uploadFile",
   async (formData, config, thunkAPI) => {
     try {
-      return await filesService.upload(formData, config);
+      return await fileManagementService.upload(formData, config);
     } catch (err) {
       const message = "";
       return thunkAPI.rejectWithValue(message);
@@ -20,8 +22,8 @@ export const uploadFile = createAsyncThunk(
   }
 );
 
-export const filesSlice = createSlice({
-  name: "files",
+export const fileManagementSlice = createSlice({
+  name: "fileManagement",
   initialState,
   reducers: {
     reset: (state) => {
@@ -29,6 +31,7 @@ export const filesSlice = createSlice({
       state.isSuccess = false;
       state.isError = false;
       state.message = "";
+      // state.file = null;
     },
   },
   //Asynchronous functions using thunk
@@ -41,15 +44,18 @@ export const filesSlice = createSlice({
       .addCase(uploadFile.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.user = action.payload;
+        state.file = action.payload;
+        state.message = "File uploaded successfully!";
       })
       .addCase(uploadFile.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
-        state.user = null;
+        state.file = null;
       });
   },
 });
 
-export default filesSlice.reducer;
+export const { reset } = fileManagementSlice.actions;
+
+export default fileManagementSlice.reducer;
