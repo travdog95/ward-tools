@@ -21,7 +21,7 @@ export const register = createAsyncThunk("auth/register", async (user, thunkAPI)
       (err.response && err.response.data && err.response.data.message) ||
       err.message ||
       err.toString();
-
+    //sends error payload to addCase(register.rejected)
     return thunkAPI.rejectWithValue(message);
   }
 });
@@ -35,7 +35,7 @@ export const login = createAsyncThunk("auth/login", async (user, thunkAPI) => {
       (error.response && error.response.data && error.response.data.message) ||
       error.message ||
       error.toString();
-    //sends error payload to addCase(register.rejected)
+    //sends error payload to addCase(login.rejected)
     return thunkAPI.rejectWithValue(message);
   }
 });

@@ -14,9 +14,9 @@ const getFiles = asyncHandler(async (req, res) => {
 // @router  POST /api/files
 // @access  Private
 const uploadFile = asyncHandler(async (req, res) => {
-  const fileName = "";
+  const uploadData = req.file;
 
-  res.status(200).json(fileName);
+  res.status(200).json(uploadData);
 });
 
 // @desc    Delete file

@@ -41,18 +41,12 @@ function Login() {
   const onSubmit = (e) => {
     e.preventDefault();
 
-    if (email === "") {
-      toast.error("Please enter a email");
-    } else if (password === "") {
-      toast.error("Please enter a password");
-    } else {
-      const userData = {
-        email,
-        password,
-      };
+    const userData = {
+      email,
+      password,
+    };
 
-      dispatch(login(userData));
-    }
+    dispatch(login(userData));
   };
 
   if (isLoading) {
