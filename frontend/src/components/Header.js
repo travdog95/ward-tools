@@ -21,7 +21,7 @@ const Header = () => {
       </div>
       {user ? (
         <div className="logo">
-          <Link to="/fileupload">Upload Data</Link>
+          <Link to="/dataFiles">Data Files</Link>
         </div>
       ) : null}
       <ul>

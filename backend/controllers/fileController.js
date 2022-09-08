@@ -5,7 +5,8 @@ const fs = require("fs");
 // @router  GET /api/files
 // @access  Private
 const getFiles = asyncHandler(async (req, res) => {
-  const files = [];
+  console.log("controller");
+  const files = ["Test", "Test 2"];
 
   res.status(200).json(files);
 });

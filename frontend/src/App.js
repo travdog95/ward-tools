@@ -5,7 +5,7 @@ import Header from "./components/Header";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import FileUpload from "./pages/FileUpload";
+import DataFiles from "./pages/DataFiles";
 
 const App = () => {
   return (
@@ -17,7 +17,7 @@ const App = () => {
             <Route path="/" element={<Dashboard />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/fileupload" element={<FileUpload />} />
+            <Route path="/dataFiles" element={<DataFiles />} />
           </Routes>
         </div>
       </Router>

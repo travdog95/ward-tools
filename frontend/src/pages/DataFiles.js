@@ -2,16 +2,20 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 // import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { uploadFile, reset } from "../features/fileManagement/fileManagementSlice";
+import { uploadFile, reset, getFiles } from "../features/fileManagement/fileManagementSlice";
 import Spinner from "../components/Spinner";
+import SelectedFile from "../features/fileManagement/components/SelectedFile";
+import UploadFileButton from "../features/fileManagement/components/UploadFileButton";
+import FileDetails from "../features/fileManagement/components/FileDetails";
+import FilesTable from "../features/fileManagement/components/FilesTable";
 
-const FileUpload = () => {
+const DataFiles = () => {
   const [selectedFile, setSelectedFile] = useState(null);
 
   const dispatch = useDispatch();
   // const naviagate = useNavigate();
 
-  const { file, isLoading, isError, isSuccess, message } = useSelector(
+  const { files, file, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.fileManagement
   );
 
@@ -27,12 +31,18 @@ const FileUpload = () => {
     dispatch(reset());
   }, [file, isError, isSuccess, message, dispatch]);
 
+  //Get list of files from uploads folder
+  useEffect(() => {
+    console.log("useEffect");
+    dispatch(getFiles());
+  }, [dispatch]);
+
   const handleFileChange = (event) => {
     // Update the state
     setSelectedFile(event.target.files[0]);
   };
 
-  const handleFileUpload = async (e) => {
+  const handleUploadFile = async (e) => {
     e.preventDefault();
     // Create an object of formData
     const formData = new FormData();
@@ -55,45 +65,6 @@ const FileUpload = () => {
     return <Spinner />;
   }
 
-  const fileData = () => {
-    if (selectedFile) {
-      return (
-        <div>
-          <h2>File Details:</h2>
-
-          <p>File Name: {selectedFile.name}</p>
-
-          <p>File Type: {selectedFile.type}</p>
-
-          <p>Last Modified: {selectedFile.lastModifiedDate.toDateString()}</p>
-        </div>
-      );
-    }
-  };
-
-  const showButton = () => {
-    if (selectedFile) {
-      return (
-        <div className="form-group">
-          <button className="btn btn-block" onClick={handleFileUpload}>
-            Upload File
-          </button>
-        </div>
-      );
-    }
-  };
-
-  const uploadedFileData = () => {
-    if (file) {
-      return (
-        <div>
-          <h2>Uploaded File Details</h2>
-          <p>New File Name: {file.filename}</p>
-        </div>
-      );
-    }
-  };
-
   return (
     <div className="form">
       <form>
@@ -105,13 +76,14 @@ const FileUpload = () => {
             id="jsonFile"
             onChange={handleFileChange}
           />
-          {showButton()}
-          {fileData()}
-          {uploadedFileData()}
+          {selectedFile ? <UploadFileButton onClick={handleUploadFile} /> : null}
         </div>
       </form>
+      {selectedFile ? <SelectedFile data={selectedFile} /> : null}
+      {file ? <FileDetails file={file} /> : null}
+      <FilesTable files={files} />
     </div>
   );
 };
 
-export default FileUpload;
+export default DataFiles;

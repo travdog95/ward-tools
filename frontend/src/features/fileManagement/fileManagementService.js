@@ -10,8 +10,15 @@ const upload = async (formData, config) => {
   return response.data;
 };
 
+const getFiles = async () => {
+  const response = await axios.get(API_URL);
+
+  return response.data;
+};
+
 const fileManagementService = {
   upload,
+  getFiles,
 };
 
 export default fileManagementService;

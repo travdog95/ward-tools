@@ -16,11 +16,21 @@ export const uploadFile = createAsyncThunk(
     try {
       return await fileManagementService.upload(formData, config);
     } catch (err) {
-      const message = "";
+      const message = err.message;
       return thunkAPI.rejectWithValue(message);
     }
   }
 );
+
+export const getFiles = createAsyncThunk("files/getAll", async (thunkAPI) => {
+  try {
+    console.log("slice");
+    return await fileManagementService.getFiles();
+  } catch (err) {
+    const message = "";
+    return thunkAPI.rejectWithValue(message);
+  }
+});
 
 export const fileManagementSlice = createSlice({
   name: "fileManagement",
@@ -52,6 +62,21 @@ export const fileManagementSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
         state.file = null;
+      })
+      .addCase(getFiles.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getFiles.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.files = action.payload;
+        state.message = "Files loaded successfully!";
+      })
+      .addCase(getFiles.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+        state.files = [];
       });
   },
 });
