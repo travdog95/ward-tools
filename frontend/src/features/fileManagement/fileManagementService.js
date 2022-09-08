@@ -10,8 +10,13 @@ const upload = async (formData, config) => {
   return response.data;
 };
 
-const getFiles = async () => {
-  const response = await axios.get(API_URL);
+const getFiles = async (token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.get(API_URL, config);
 
   return response.data;
 };

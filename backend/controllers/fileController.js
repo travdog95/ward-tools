@@ -1,20 +1,34 @@
 const asyncHandler = require("express-async-handler");
 const fs = require("fs");
+const constants = require("../config/constants");
 
 // @desc    Get files
 // @router  GET /api/files
 // @access  Private
 const getFiles = asyncHandler(async (req, res) => {
-  console.log("controller");
-  const files = ["Test", "Test 2"];
+  let files = [];
 
-  res.status(200).json(files);
+  //Read files in uploads directory
+  fs.readdir("./" + constants.UPLOAD_DIR, (err, uploadedFiles) => {
+    //handling error
+    if (err) {
+      res.status(400);
+      throw new Error("Unable to scan directory: " + err);
+    }
+
+    //Add file to files array
+    uploadedFiles.forEach((file) => {
+      files.push(file);
+    });
+
+    res.status(200).json(files);
+  });
 });
 
 // @desc    Add file
 // @router  POST /api/files
 // @access  Private
-const uploadFile = asyncHandler(async (req, res) => {
+const uploadFile = asyncHandler(async (req, res, next) => {
   const uploadData = req.file;
 
   res.status(200).json(uploadData);

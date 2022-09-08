@@ -6,6 +6,7 @@ const initialState = {
   isError: false,
   isSuccess: false,
   isLoading: false,
+  isFileUploaded: false,
   message: "",
   files: [],
 };
@@ -22,10 +23,10 @@ export const uploadFile = createAsyncThunk(
   }
 );
 
-export const getFiles = createAsyncThunk("files/getAll", async (thunkAPI) => {
+export const getFiles = createAsyncThunk("files/getAll", async (_, thunkAPI) => {
   try {
-    console.log("slice");
-    return await fileManagementService.getFiles();
+    const token = thunkAPI.getState().auth.user.token;
+    return await fileManagementService.getFiles(token);
   } catch (err) {
     const message = "";
     return thunkAPI.rejectWithValue(message);
@@ -37,11 +38,12 @@ export const fileManagementSlice = createSlice({
   initialState,
   reducers: {
     reset: (state) => {
-      state.isLoading = false;
-      state.isSuccess = false;
       state.isError = false;
+      state.isSuccess = false;
+      state.isLoading = false;
+      state.isFileUploaded = false;
       state.message = "";
-      // state.file = null;
+      state.files = [];
     },
   },
   //Asynchronous functions using thunk
@@ -53,8 +55,9 @@ export const fileManagementSlice = createSlice({
       })
       .addCase(uploadFile.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.isSuccess = true;
+        state.isFileUploaded = true;
         state.file = action.payload;
+        state.files.push(action.payload.filename);
         state.message = "File uploaded successfully!";
       })
       .addCase(uploadFile.rejected, (state, action) => {
@@ -70,13 +73,11 @@ export const fileManagementSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.files = action.payload;
-        state.message = "Files loaded successfully!";
       })
       .addCase(getFiles.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
-        state.files = [];
       });
   },
 });

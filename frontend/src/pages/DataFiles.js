@@ -1,41 +1,46 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { uploadFile, reset, getFiles } from "../features/fileManagement/fileManagementSlice";
+
 import Spinner from "../components/Spinner";
+import { uploadFile, reset, getFiles } from "../features/fileManagement/fileManagementSlice";
 import SelectedFile from "../features/fileManagement/components/SelectedFile";
 import UploadFileButton from "../features/fileManagement/components/UploadFileButton";
-import FileDetails from "../features/fileManagement/components/FileDetails";
+// import FileDetails from "../features/fileManagement/components/FileDetails";
 import FilesTable from "../features/fileManagement/components/FilesTable";
 
 const DataFiles = () => {
   const [selectedFile, setSelectedFile] = useState(null);
 
   const dispatch = useDispatch();
-  // const naviagate = useNavigate();
+  const navigate = useNavigate();
 
-  const { files, file, isLoading, isError, isSuccess, message } = useSelector(
+  const { files, isLoading, isError, message, isFileUploaded } = useSelector(
     (state) => state.fileManagement
   );
+
+  const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (isError) {
       toast.error(message);
     }
 
-    if (isSuccess) {
+    if (isFileUploaded) {
       toast.success(message);
     }
 
-    dispatch(reset());
-  }, [file, isError, isSuccess, message, dispatch]);
+    if (!user) {
+      navigate("/login");
+    }
 
-  //Get list of files from uploads folder
-  useEffect(() => {
-    console.log("useEffect");
     dispatch(getFiles());
-  }, [dispatch]);
+
+    return () => {
+      dispatch(reset());
+    };
+  }, [user, navigate, message, isError, dispatch, isFileUploaded]);
 
   const handleFileChange = (event) => {
     // Update the state
@@ -80,7 +85,6 @@ const DataFiles = () => {
         </div>
       </form>
       {selectedFile ? <SelectedFile data={selectedFile} /> : null}
-      {file ? <FileDetails file={file} /> : null}
       <FilesTable files={files} />
     </div>
   );

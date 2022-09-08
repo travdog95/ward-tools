@@ -1,14 +1,14 @@
 import FileTableRow from "./FileTableRow";
 
 const FilesTable = (props) => {
-  const files = props.files;
+  const { files } = props;
   return (
-    <div>
+    <>
       <div>Files</div>
-      {files.forEach((file) => {
-        <FileTableRow file={file} />;
+      {files.map((file, index) => {
+        return <FileTableRow key={index} file={file} />;
       })}
-    </div>
+    </>
   );
 };
 
