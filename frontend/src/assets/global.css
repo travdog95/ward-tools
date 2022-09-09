@@ -199,6 +199,21 @@ input[type="file"] {
   animation: spin 1.2s linear infinite;
 }
 
+.file-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.file-row-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: .5rem;
+}
+
 @keyframes spin {
   0% {
     transform: rotate(0deg);

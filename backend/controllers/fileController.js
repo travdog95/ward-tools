@@ -38,14 +38,21 @@ const uploadFile = asyncHandler(async (req, res, next) => {
 // @router  DELETE /api/files/:fileName
 // @access  Private
 const deleteFile = asyncHandler(async (req, res) => {
-  const fileName = req.params.fileName;
+  const file = req.params.id;
 
-  if (!fileName) {
+  if (!file) {
     res.status(400);
     throw new Error("File not found");
   }
 
-  res.status(200).json({ fileName });
+  fs.unlink("./" + constants.UPLOAD_DIR + "/" + file, (err) => {
+    if (err) {
+      res.status(400);
+      throw new Error(err);
+    }
+
+    res.status(200).json({ messsage: "File deleted", file });
+  });
 });
 
 module.exports = {

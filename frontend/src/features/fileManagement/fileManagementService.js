@@ -10,6 +10,7 @@ const upload = async (formData, config) => {
   return response.data;
 };
 
+//Get Files
 const getFiles = async (token) => {
   const config = {
     headers: {
@@ -21,9 +22,22 @@ const getFiles = async (token) => {
   return response.data;
 };
 
+//Get Files
+const deleteFile = async (file, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.delete(API_URL + file, config);
+
+  return response.data;
+};
+
 const fileManagementService = {
   upload,
   getFiles,
+  deleteFile,
 };
 
 export default fileManagementService;

@@ -16,7 +16,7 @@ const DataFiles = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { files, isLoading, isError, message, isFileUploaded } = useSelector(
+  const { files, isLoading, isError, message, isSuccess } = useSelector(
     (state) => state.fileManagement
   );
 
@@ -27,7 +27,7 @@ const DataFiles = () => {
       toast.error(message);
     }
 
-    if (isFileUploaded) {
+    if (isSuccess) {
       toast.success(message);
     }
 
@@ -40,7 +40,7 @@ const DataFiles = () => {
     return () => {
       dispatch(reset());
     };
-  }, [user, navigate, message, isError, dispatch, isFileUploaded]);
+  }, [user, navigate, message, isError, dispatch, isSuccess]);
 
   const handleFileChange = (event) => {
     // Update the state

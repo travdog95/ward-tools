@@ -4,7 +4,7 @@ const FilesTable = (props) => {
   const { files } = props;
   return (
     <>
-      <div>Files</div>
+      <h2>Files</h2>
       {files.map((file, index) => {
         return <FileTableRow key={index} file={file} />;
       })}

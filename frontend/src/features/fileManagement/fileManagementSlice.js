@@ -6,7 +6,6 @@ const initialState = {
   isError: false,
   isSuccess: false,
   isLoading: false,
-  isFileUploaded: false,
   message: "",
   files: [],
 };
@@ -33,6 +32,16 @@ export const getFiles = createAsyncThunk("files/getAll", async (_, thunkAPI) => 
   }
 });
 
+export const deleteFile = createAsyncThunk("files/delete", async (file, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState().auth.user.token;
+    return await fileManagementService.deleteFile(file, token);
+  } catch (err) {
+    const message = "";
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
 export const fileManagementSlice = createSlice({
   name: "fileManagement",
   initialState,
@@ -42,6 +51,7 @@ export const fileManagementSlice = createSlice({
       state.isSuccess = false;
       state.isLoading = false;
       state.isFileUploaded = false;
+      state.isFileDeleted = false;
       state.message = "";
       state.files = [];
     },
@@ -55,7 +65,7 @@ export const fileManagementSlice = createSlice({
       })
       .addCase(uploadFile.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.isFileUploaded = true;
+        state.isSuccess = true;
         state.file = action.payload;
         state.files.push(action.payload.filename);
         state.message = "File uploaded successfully!";
@@ -71,10 +81,24 @@ export const fileManagementSlice = createSlice({
       })
       .addCase(getFiles.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.isSuccess = true;
+        // state.isSuccess = true;
         state.files = action.payload;
       })
       .addCase(getFiles.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(deleteFile.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteFile.fulfilled, (state, action) => {
+        state.isSuccess = true;
+        state.isLoading = false;
+        state.files = state.files.filter((file) => file !== action.payload.file);
+        state.message = "File deleted successfully";
+      })
+      .addCase(deleteFile.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
