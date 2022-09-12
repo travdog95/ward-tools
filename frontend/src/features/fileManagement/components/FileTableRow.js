@@ -1,16 +1,15 @@
 import { useDispatch } from "react-redux";
 import FileRowButtons from "./FileRowButtons";
-import { deleteFile } from "../../../features/fileManagement/fileManagementSlice";
+import { deleteFile, previewFile } from "../fileSlice";
 
 const FileTableRow = ({ file }) => {
   const dispatch = useDispatch();
   const handleDelete = () => {
-    console.log("delete clicked");
     dispatch(deleteFile(file));
   };
 
   const handlePreview = () => {
-    console.log("Preview clicked");
+    dispatch(previewFile(file));
   };
 
   return (

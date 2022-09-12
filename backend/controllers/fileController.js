@@ -25,6 +25,42 @@ const getFiles = asyncHandler(async (req, res) => {
   });
 });
 
+// @desc    Get file
+// @router  GET /api/files
+// @access  Private
+const getFile = asyncHandler(async (req, res) => {
+  const filename = req.params.id;
+
+  // Use fs.readFile() method to read the file
+  fs.readFile("./" + constants.UPLOAD_DIR + "/" + filename, function (err, data) {
+    if (err) {
+      res.status(400);
+      throw new Error("Unable to read file: " + err);
+    }
+
+    const file = {
+      filename,
+      data: JSON.parse(data),
+    };
+
+    // const fileData = JSON.parse(data);
+    // Display the file content
+    // console.log(data);
+    res.status(200).json(file);
+  });
+
+  //Read files in uploads directory
+  // fs.readdir("./" + constants.UPLOAD_DIR, (err, uploadedFiles) => {
+  //   //handling error
+  //   if (err) {
+  //     res.status(400);
+  //     throw new Error("Unable to scan directory: " + err);
+  //   }
+
+  //   res.status(200).json(file);
+  // });
+});
+
 // @desc    Add file
 // @router  POST /api/files
 // @access  Private
@@ -59,4 +95,5 @@ module.exports = {
   getFiles,
   uploadFile,
   deleteFile,
+  getFile,
 };

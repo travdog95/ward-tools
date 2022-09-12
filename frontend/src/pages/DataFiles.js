@@ -4,11 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import Spinner from "../components/Spinner";
-import { uploadFile, reset, getFiles } from "../features/fileManagement/fileManagementSlice";
+import { uploadFile, reset, getFiles } from "../features/fileManagement/fileSlice";
 import SelectedFile from "../features/fileManagement/components/SelectedFile";
 import UploadFileButton from "../features/fileManagement/components/UploadFileButton";
-// import FileDetails from "../features/fileManagement/components/FileDetails";
 import FilesTable from "../features/fileManagement/components/FilesTable";
+import PreviewFile from "../features/fileManagement/components/PreviewFile";
 
 const DataFiles = () => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -16,7 +16,7 @@ const DataFiles = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { files, isLoading, isError, message, isSuccess } = useSelector(
+  const { files, isLoading, isError, message, isSuccess, file, previewFile } = useSelector(
     (state) => state.fileManagement
   );
 
@@ -86,6 +86,7 @@ const DataFiles = () => {
       </form>
       {selectedFile ? <SelectedFile data={selectedFile} /> : null}
       <FilesTable files={files} />
+      <PreviewFile file={previewFile} />
     </div>
   );
 };

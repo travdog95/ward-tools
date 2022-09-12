@@ -34,10 +34,23 @@ const deleteFile = async (file, token) => {
   return response.data;
 };
 
+//Get Files
+const preview = async (file, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.get(API_URL + file, config);
+
+  return response.data;
+};
+
 const fileManagementService = {
   upload,
   getFiles,
   deleteFile,
+  preview,
 };
 
 export default fileManagementService;

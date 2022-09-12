@@ -1,8 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import fileManagementService from "./fileManagementService";
+import fileManagementService from "./fileService";
 
 const initialState = {
   file: null,
+  previewFile: {
+    fileName: "",
+    data: [],
+  },
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -42,6 +46,16 @@ export const deleteFile = createAsyncThunk("files/delete", async (file, thunkAPI
   }
 });
 
+export const previewFile = createAsyncThunk("files/preview", async (filename, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState().auth.user.token;
+    return await fileManagementService.preview(filename, token);
+  } catch (err) {
+    const message = err.message;
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
 export const fileManagementSlice = createSlice({
   name: "fileManagement",
   initialState,
@@ -54,6 +68,7 @@ export const fileManagementSlice = createSlice({
       state.isFileDeleted = false;
       state.message = "";
       state.files = [];
+      // state.previewFile = {};
     },
   },
   //Asynchronous functions using thunk
@@ -66,7 +81,7 @@ export const fileManagementSlice = createSlice({
       .addCase(uploadFile.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.file = action.payload;
+        state.file = action.payload.filename;
         state.files.push(action.payload.filename);
         state.message = "File uploaded successfully!";
       })
@@ -97,11 +112,27 @@ export const fileManagementSlice = createSlice({
         state.isLoading = false;
         state.files = state.files.filter((file) => file !== action.payload.file);
         state.message = "File deleted successfully";
+        state.file = null;
       })
       .addCase(deleteFile.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
+      })
+      .addCase(previewFile.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(previewFile.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.previewFile = action.payload;
+        state.message = "File loaded successfully!";
+      })
+      .addCase(previewFile.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+        state.file = null;
       });
   },
 });
