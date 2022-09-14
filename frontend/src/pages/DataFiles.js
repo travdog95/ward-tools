@@ -16,7 +16,7 @@ const DataFiles = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { files, isLoading, isError, message, isSuccess, file, previewFile } = useSelector(
+  const { files, isLoading, isError, message, isSuccess, previewFile } = useSelector(
     (state) => state.fileManagement
   );
 
@@ -71,23 +71,25 @@ const DataFiles = () => {
   }
 
   return (
-    <div className="form">
-      <form>
-        <div className="form-group">
-          <input
-            type="file"
-            className="form-control"
-            name="jsonFile"
-            id="jsonFile"
-            onChange={handleFileChange}
-          />
-          {selectedFile ? <UploadFileButton onClick={handleUploadFile} /> : null}
-        </div>
-      </form>
+    <>
+      <div className="form">
+        <form>
+          <div className="form-group">
+            <input
+              type="file"
+              className="form-control"
+              name="jsonFile"
+              id="jsonFile"
+              onChange={handleFileChange}
+            />
+            {selectedFile ? <UploadFileButton onClick={handleUploadFile} /> : null}
+          </div>
+        </form>
+      </div>
       {selectedFile ? <SelectedFile data={selectedFile} /> : null}
       <FilesTable files={files} />
-      <PreviewFile file={previewFile} />
-    </div>
+      {previewFile.data.length > 0 ? <PreviewFile file={previewFile} /> : null}
+    </>
   );
 };
 

@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Header from "./components/Header";
@@ -6,8 +7,11 @@ import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import DataFiles from "./pages/DataFiles";
+// import ConfirmationDialog from "./components/ConfirmationDialog";
 
 const App = () => {
+  const { confirmationDialog } = useSelector((state) => state.app);
+
   return (
     <>
       <Router>
@@ -22,6 +26,7 @@ const App = () => {
         </div>
       </Router>
       <ToastContainer />
+      {/* {confirmationDialog.open ? <ConfirmationDialog /> : null} */}
     </>
   );
 };

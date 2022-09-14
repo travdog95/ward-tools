@@ -84,6 +84,7 @@ export const fileManagementSlice = createSlice({
         state.file = action.payload.filename;
         state.files.push(action.payload.filename);
         state.message = "File uploaded successfully!";
+        state.previewFile = { fileName: "", data: [] };
       })
       .addCase(uploadFile.rejected, (state, action) => {
         state.isLoading = false;
@@ -113,6 +114,7 @@ export const fileManagementSlice = createSlice({
         state.files = state.files.filter((file) => file !== action.payload.file);
         state.message = "File deleted successfully";
         state.file = null;
+        state.previewFile = { fileName: "", data: [] };
       })
       .addCase(deleteFile.rejected, (state, action) => {
         state.isLoading = false;
@@ -126,7 +128,7 @@ export const fileManagementSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.previewFile = action.payload;
-        state.message = "File loaded successfully!";
+        // state.message = "File loaded successfully!";
       })
       .addCase(previewFile.rejected, (state, action) => {
         state.isLoading = false;
