@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 
 import FileRowButtons from "./FileRowButtons";
-import { deleteFile, previewFile } from "../fileSlice";
+import { deleteFile, previewFile, importDataFile } from "../fileSlice";
 import ConfirmationDialog from "../../../components/ConfirmationDialog";
 
 const FileTableRow = ({ file }) => {
@@ -25,7 +25,7 @@ const FileTableRow = ({ file }) => {
   };
 
   const handleImport = () => {
-    console.log("handle import");
+    dispatch(importDataFile({ filename: file }));
   };
 
   const handleCancel = () => {

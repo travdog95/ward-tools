@@ -46,11 +46,25 @@ const preview = async (file, token) => {
   return response.data;
 };
 
+//Import data
+const importData = async (file, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await axios.post(API_URL + "import/", file, config);
+
+  return response.data;
+};
+
 const fileManagementService = {
   upload,
   getFiles,
   deleteFile,
   preview,
+  importData,
 };
 
 export default fileManagementService;

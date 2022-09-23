@@ -56,6 +56,19 @@ export const previewFile = createAsyncThunk("files/preview", async (filename, th
   }
 });
 
+export const importDataFile = createAsyncThunk("files/import", async (file, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState().auth.user.token;
+    return await fileManagementService.importData(file, token);
+  } catch (err) {
+    const message =
+      (err.response && err.response.data && err.response.data.message) ||
+      err.message ||
+      err.toString();
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
 export const fileManagementSlice = createSlice({
   name: "fileManagement",
   initialState,
@@ -131,6 +144,21 @@ export const fileManagementSlice = createSlice({
         // state.message = "File loaded successfully!";
       })
       .addCase(previewFile.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+        state.file = null;
+      })
+      .addCase(importDataFile.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(importDataFile.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        // state.importDataFile = action.payload;
+        // state.message = "File loaded successfully!";
+      })
+      .addCase(importDataFile.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
