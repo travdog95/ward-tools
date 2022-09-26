@@ -6,6 +6,7 @@ import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import DataFiles from "./pages/DataFiles";
+import Members from "./pages/Members";
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/dataFiles" element={<DataFiles />} />
+            <Route path="/members" element={<Members />} />
           </Routes>
         </div>
       </Router>

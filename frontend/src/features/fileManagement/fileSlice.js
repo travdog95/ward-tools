@@ -141,7 +141,6 @@ export const fileManagementSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.previewFile = action.payload;
-        // state.message = "File loaded successfully!";
       })
       .addCase(previewFile.rejected, (state, action) => {
         state.isLoading = false;
@@ -155,8 +154,7 @@ export const fileManagementSlice = createSlice({
       .addCase(importDataFile.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        // state.importDataFile = action.payload;
-        // state.message = "File loaded successfully!";
+        state.message = "Import completed successfully!";
       })
       .addCase(importDataFile.rejected, (state, action) => {
         state.isLoading = false;

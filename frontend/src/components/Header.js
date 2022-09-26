@@ -20,9 +20,14 @@ const Header = () => {
         <Link to="/">Home</Link>
       </div>
       {user ? (
-        <div className="logo">
-          <Link to="/dataFiles">Data Files</Link>
-        </div>
+        <>
+          <div className="logo">
+            <Link to="/dataFiles">Data Files</Link>
+          </div>
+          <div className="logo">
+            <Link to="/members">Members</Link>
+          </div>
+        </>
       ) : null}
       <ul>
         {user ? (

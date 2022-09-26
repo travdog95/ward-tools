@@ -27,7 +27,7 @@ const DataFiles = () => {
       toast.error(message);
     }
 
-    if (isSuccess) {
+    if (isSuccess && message) {
       toast.success(message);
     }
 

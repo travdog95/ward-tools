@@ -16,7 +16,7 @@ const getMemberId = (url) => {
 
   memberId = urlSegments[3].substring(0, urlSegments[3].indexOf("?"));
 
-  return memberId;
+  return parseInt(memberId);
 };
 
 const readFile = async (filePath) => {
@@ -25,6 +25,7 @@ const readFile = async (filePath) => {
     return data;
   } catch (err) {
     console.log(err);
+    return err;
   }
 };
 
@@ -57,20 +58,28 @@ const getFiles = asyncHandler(async (req, res) => {
 const getFile = asyncHandler(async (req, res) => {
   const filename = req.params.id;
 
-  // Use fs.readFile() method to read the file
-  fs.readFile("./" + constants.UPLOAD_DIR + "/" + filename, function (err, data) {
-    if (err) {
-      res.status(400);
-      throw new Error("Unable to read file: " + err);
-    }
+  const data = await readFile("./" + constants.UPLOAD_DIR + "/" + filename);
 
-    const file = {
-      filename,
-      data: JSON.parse(data),
-    };
+  const file = {
+    filename,
+    data: JSON.parse(data),
+  };
 
-    res.status(200).json(file);
-  });
+  // // Use fs.readFile() method to read the file
+  // fs.readFile("./" + constants.UPLOAD_DIR + "/" + filename, function (err, data) {
+  //   if (err) {
+  //     res.status(400);
+  //     throw new Error("Unable to read file: " + err);
+  //   }
+
+  //   const file = {
+  //     filename,
+  //     data: JSON.parse(data),
+  //   };
+
+  //   res.status(200).json(file);
+  // });
+  res.status(200).json(file);
 });
 
 // @desc    Add file
@@ -118,13 +127,13 @@ const importData = asyncHandler(async (req, res) => {
   const fileData = JSON.parse(data);
   let members = [];
   let errors = [];
+  let member = {};
+  let operation = "";
 
   await Promise.all(
     fileData.map(async (row) => {
-      let memberId = getMemberId(row.PreferredName_URL);
+      const memberId = getMemberId(row.PreferredName_URL);
       let firstName, middleName, lastName, suffix;
-
-      const memberExists = await Member.findOne({ memberId });
 
       const memberData = {
         firstName,
@@ -148,74 +157,32 @@ const importData = asyncHandler(async (req, res) => {
         templeRecommendType: row.TempleRecommendType,
       };
 
-      if (memberExists) {
-        //Update member
-        // const member = await Member.update(memberData);
+      member = await Member.findOneAndUpdate({ memberId }, memberData);
+
+      if (member) {
+        //Member updated
+        operation = "update";
       } else {
         //Add member
-        const member = await Member.create(memberData);
-
-        if (member) {
-          members.push({
-            _id: member.id,
-            memberId: member.memberId,
-          });
-        } else {
-          errors.push({
-            memberId,
-          });
-        }
+        member = await Member.create(memberData);
+        operation = "insert";
       }
+
+      members.push({
+        _id: member.id,
+        memberId: member.memberId,
+        operation,
+      });
     })
   );
 
   if (errors.length > 0) {
     res.status(400);
+    console.error("Data Import errors:", errors);
     throw new Error("Invalid member data");
   }
 
-  res.status(201).json({ messsage: "Data imported!", data: members });
-
-  // // Use fs.readFile() method to read the file
-  // fs.readFile("./" + constants.UPLOAD_DIR + "/" + filename,  function (err, data) {
-  //   if (err) {
-  //     res.status(400);
-  //     throw new Error("Unable to read file: " + err);
-  //   }
-
-  //   const fileData = JSON.parse(data);
-
-  //   let firstName, middleName, lastName, suffix;
-
-  //   fileData.forEach((row) => {
-  //     let memberId = getMemberId(row.PreferredName_URL);
-
-  //     const member = await Member.create({
-  //       firstName,
-  //       middleName,
-  //       lastName,
-  //       suffix,
-  //       city: row["Address-City"],
-  //       postalCode: row["Address-PostalCode"],
-  //       state: row["Address-StateorProvince"],
-  //       // birthDate: ,
-  //       gender: row.Gender,
-  //       email: row["IndividualE-mail"],
-  //       phone: row.IndividualPhone,
-  //       callings: row.CallingswithDateSustainedandSetApart,
-  //       // moveInDate: Date,
-  //       preferredName: row.PreferredName,
-  //       memberId,
-  //       priesthoodOffice: row.PriesthoodOffice,
-  //       // templeRecommendExpirationDate: Date,
-  //       templeRecommendStatus: row.TempleRecommendStatus,
-  //       templeRecommendType: row.TempleRecommendType,
-  //     });
-
-  //   });
-
-  //   res.status(201).json({ messsage: "Data imported!", data: fileData });
-  // });
+  res.status(201).json({ messsage: "Import completed successfully!", data: members });
 });
 
 module.exports = {
