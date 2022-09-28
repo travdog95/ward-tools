@@ -11,6 +11,15 @@ const getMembers = asyncHandler(async (req, res) => {
   res.status(200).json(members);
 });
 
+// @desc    Get member
+// @router  GET /api/members/:id
+// @access  Private
+const getMember = asyncHandler(async (req, res) => {
+  const member = await Member.findById(req.params.id);
+
+  res.status(200).json(member);
+});
+
 // @desc    Add member
 // @router  POST /api/members
 // @access  Private
@@ -81,4 +90,5 @@ module.exports = {
   updateMember,
   patchMember,
   deleteMember,
+  getMember,
 };

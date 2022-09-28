@@ -2,11 +2,11 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
+import { format, parseISO, differenceInYears } from "date-fns";
 
 import Spinner from "../components/Spinner";
 import { getMembers } from "../features/members/memberSlice";
-import MembersTable from "../features/members/components/MembersTable";
 
 const Members = () => {
   const navigate = useNavigate();
@@ -42,14 +42,24 @@ const Members = () => {
     { field: "preferredName", headerName: "Preferred Name", width: 250 },
     { field: "gender", headerName: "Gender", width: 75 },
     { field: "age", headerName: "Age", width: 75 },
-    { field: "birthDate", headerName: "Birth Date", width: 150 },
+    { field: "birthDate", headerName: "Birthday", width: 100 },
     { field: "phone", headerName: "Phone Number", width: 150 },
-    { field: "email", headerName: "E-mail", width: 250 },
+    { field: "email", headerName: "E-mail", width: 300 },
   ];
 
   const rows = members.map((member, index) => {
-    return { ...{ id: index, age: 20 }, ...member };
+    //Calculate age
+    const age = differenceInYears(new Date(), parseISO(member.birthDate));
+
+    //format birth date
+    const birthDate = format(parseISO(member.birthDate), "LLL d");
+
+    return { ...member, ...{ id: index, age, birthDate } };
   });
+
+  const handleRowClick = (params) => {
+    navigate("/member/" + params.row._id);
+  };
 
   return (
     <>
@@ -60,6 +70,8 @@ const Members = () => {
             <DataGrid
               rows={rows}
               columns={columns}
+              onRowClick={handleRowClick}
+              components={{ Toolbar: GridToolbarQuickFilter }}
               density="compact"
               rowsPerPageOptions={[20, 50, 100]}
               initialState={{

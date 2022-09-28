@@ -134,27 +134,30 @@ const importData = asyncHandler(async (req, res) => {
     fileData.map(async (row) => {
       const memberId = getMemberId(row.PreferredName_URL);
       let firstName, middleName, lastName, suffix;
+      firstName = row.PreferredName.substring(row.PreferredName.indexOf(",") + 2);
+      lastName = row.PreferredName.substring(0, row.PreferredName.indexOf(","));
+
+      const templeRecommendExpirationDate =
+        row.TempleRecommendExpirationDate === "" ? "" : "1 " + row.TempleRecommendExpirationDate;
 
       const memberData = {
         firstName,
         middleName,
         lastName,
         suffix,
-        city: row["Address-City"],
-        postalCode: row["Address-PostalCode"],
-        state: row["Address-StateorProvince"],
-        // birthDate: ,
+        birthDate: row.BirthDate,
         gender: row.Gender,
         email: row["IndividualE-mail"],
         phone: row.IndividualPhone,
         callings: row.CallingswithDateSustainedandSetApart,
-        // moveInDate: Date,
+        moveInDate: row.MoveInDate,
         preferredName: row.PreferredName,
         memberId,
         priesthoodOffice: row.PriesthoodOffice,
-        // templeRecommendExpirationDate: Date,
+        templeRecommendExpirationDate,
         templeRecommendStatus: row.TempleRecommendStatus,
         templeRecommendType: row.TempleRecommendType,
+        marriageDate: row.MarriageDate,
       };
 
       member = await Member.findOneAndUpdate({ memberId }, memberData);

@@ -2,10 +2,12 @@ import { DataGrid } from "@mui/x-data-grid";
 
 const PreviewFile = ({ file }) => {
   const columns = [
-    { field: "PreferredName", headerName: "Preferred Name", width: 200 },
-    { field: "Address-Street1", headerName: "Address", width: 200 },
-    { field: "Age", headerName: "Age", width: 50 },
-    { field: "BirthDate", headerName: "Birth Date", width: 120 },
+    { field: "PreferredName", headerName: "Preferred Name", width: 250 },
+    { field: "Gender", headerName: "Gender", width: 75 },
+    { field: "Age", headerName: "Age", width: 75 },
+    { field: "BirthDate", headerName: "Birth Date", width: 150 },
+    { field: "IndividualPhone", headerName: "Phone Number", width: 150 },
+    { field: "IndividualE-mail", headerName: "E-mail", width: 250 },
   ];
 
   const rows = file.data.map((row, index) => {
@@ -13,15 +15,21 @@ const PreviewFile = ({ file }) => {
   });
 
   return (
-    <div style={{ height: 500, width: "100%" }}>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        rowsPerPageOptions={[25, 50, 100]}
-        initialState={{
-          pagination: { pageSize: 25 },
-        }}
-      />
+    <div style={{ height: 820, width: "100%" }}>
+      <div style={{ display: "flex", height: "100%" }}>
+        <div style={{ flexGrow: 1 }}>
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            density="compact"
+            rowsPerPageOptions={[20, 50, 100]}
+            initialState={{
+              pagination: { pageSize: 20 },
+              sorting: { sortModel: [{ field: "preferredName", sort: "asc" }] },
+            }}
+          />
+        </div>
+      </div>
     </div>
   );
 };
