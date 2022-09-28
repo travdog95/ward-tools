@@ -134,6 +134,7 @@ h3 {
   text-align: left;
   display: block;
   margin: 0 0 5px 3px;
+  border: 1px solid red;
 }
 
 .btn, input::file-selector-button {
@@ -212,6 +213,35 @@ input[type="file"] {
   justify-content: space-between;
   align-items: center;
   gap: .5rem;
+}
+
+/* Member form */
+.profile-container .profile-header {
+  text-align: left;
+  font-size: 2rem;
+}
+
+.form-row {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: .5rem;
+  margin-bottom: .5rem;
+}
+
+.form-row .label {
+  width: 200px;
+  background-color: lightgray;
+  justify-content: flex-end;
+  border-radius: 2px;
+  font-weight: bold;
+}
+
+.form-row .label, .form-row .info {
+  display: flex;
+  align-items: center;
+  padding: .5rem;
+  height: 2.5rem;
 }
 
 @keyframes spin {

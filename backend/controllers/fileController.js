@@ -152,12 +152,15 @@ const importData = asyncHandler(async (req, res) => {
         callings: row.CallingswithDateSustainedandSetApart,
         moveInDate: row.MoveInDate,
         preferredName: row.PreferredName,
+        prefferedNameURL: row.PreferredName_URL,
         memberId,
         priesthoodOffice: row.PriesthoodOffice,
         templeRecommendExpirationDate,
         templeRecommendStatus: row.TempleRecommendStatus,
         templeRecommendType: row.TempleRecommendType,
         marriageDate: row.MarriageDate,
+        address1: row["Address-Street1"],
+        address2: "",
       };
 
       member = await Member.findOneAndUpdate({ memberId }, memberData);
