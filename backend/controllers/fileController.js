@@ -65,20 +65,6 @@ const getFile = asyncHandler(async (req, res) => {
     data: JSON.parse(data),
   };
 
-  // // Use fs.readFile() method to read the file
-  // fs.readFile("./" + constants.UPLOAD_DIR + "/" + filename, function (err, data) {
-  //   if (err) {
-  //     res.status(400);
-  //     throw new Error("Unable to read file: " + err);
-  //   }
-
-  //   const file = {
-  //     filename,
-  //     data: JSON.parse(data),
-  //   };
-
-  //   res.status(200).json(file);
-  // });
   res.status(200).json(file);
 });
 

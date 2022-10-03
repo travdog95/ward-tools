@@ -27,9 +27,23 @@ const getMember = async (id, token) => {
   return response.data;
 };
 
+//Update Member
+const updateMember = async (id, member, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await axios.put(API_URL + id, member, config);
+
+  return response.data;
+};
+
 const membersService = {
   getMembers,
   getMember,
+  updateMember,
 };
 
 export default membersService;

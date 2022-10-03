@@ -221,7 +221,7 @@ input[type="file"] {
   font-size: 2rem;
 }
 
-.form-row {
+.form-row, .info-row {
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -229,7 +229,11 @@ input[type="file"] {
   margin-bottom: .5rem;
 }
 
-.form-row .label {
+.info-row {
+  align-items: flex-start;
+}
+
+.form-row .label,  .info-row .label {
   width: 200px;
   background-color: lightgray;
   justify-content: flex-end;
@@ -237,11 +241,24 @@ input[type="file"] {
   font-weight: bold;
 }
 
-.form-row .label, .form-row .info {
+.form-row .label, .info-row .label, .form-row .value {
   display: flex;
   align-items: center;
   padding: .5rem;
   height: 2.5rem;
+}
+
+.profile-form, .profile-info {
+  width: 50%;
+}
+
+.profile-inner-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.profile-details {
+  padding: .5rem;
 }
 
 @keyframes spin {

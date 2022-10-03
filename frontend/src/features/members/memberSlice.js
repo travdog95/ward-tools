@@ -14,8 +14,11 @@ export const getMembers = createAsyncThunk("members/getAll", async (_, thunkAPI)
   try {
     const token = thunkAPI.getState().auth.user.token;
     return await memberService.getMembers(token);
-  } catch (err) {
-    const message = "";
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
     return thunkAPI.rejectWithValue(message);
   }
 });
@@ -24,8 +27,25 @@ export const getMember = createAsyncThunk("members/get", async (id, thunkAPI) =>
   try {
     const token = thunkAPI.getState().auth.user.token;
     return await memberService.getMember(id, token);
-  } catch (err) {
-    const message = "";
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
+export const updateMember = createAsyncThunk("members/update", async (member, thunkAPI) => {
+  const id = member.id;
+  try {
+    const token = thunkAPI.getState().auth.user.token;
+    return await memberService.updateMember(id, member, token);
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
     return thunkAPI.rejectWithValue(message);
   }
 });
@@ -34,14 +54,7 @@ export const memberSlice = createSlice({
   name: "member",
   initialState,
   reducers: {
-    reset: (state) => {
-      state.isError = false;
-      state.isSuccess = false;
-      state.isLoading = false;
-      state.message = "";
-      state.members = [];
-      state.member = {};
-    },
+    reset: (state) => initialState,
   },
   //Asynchronous functions using thunk
   extraReducers: (builder) => {
@@ -52,7 +65,7 @@ export const memberSlice = createSlice({
       })
       .addCase(getMembers.fulfilled, (state, action) => {
         state.isLoading = false;
-        // state.isSuccess = true;
+        state.isSuccess = true;
         state.members = action.payload;
       })
       .addCase(getMembers.rejected, (state, action) => {
@@ -70,6 +83,19 @@ export const memberSlice = createSlice({
         state.member = action.payload;
       })
       .addCase(getMember.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(updateMember.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateMember.fulfilled, (state, action) => {
+        state.isLoading = false;
+        // state.isSuccess = true;
+        state.member = action.payload;
+      })
+      .addCase(updateMember.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

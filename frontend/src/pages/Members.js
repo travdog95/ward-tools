@@ -6,34 +6,32 @@ import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { calculateAge, formatDate } from "../utils/helpers";
 
 import Spinner from "../components/Spinner";
-import { getMembers } from "../features/members/memberSlice";
+import { getMembers, reset } from "../features/members/memberSlice";
 
 const Members = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const { user } = useSelector((state) => state.auth);
-  const { members, isLoading, isError, message, isSuccess } = useSelector((state) => state.member);
+  const { members, isLoading, isError, message } = useSelector((state) => state.member);
 
   useEffect(() => {
     if (isError) {
       toast.error(message);
     }
 
-    if (isSuccess && message) {
-      toast.success(message);
-    }
-
     if (!user) {
       navigate("/login");
     }
 
+    console.log("members useEffect");
     dispatch(getMembers());
 
-    // return () => {
-    //   dispatch(reset())
-    // }
-  }, [user, navigate, message, isError, dispatch, isSuccess]);
+    //When unmounting the component (leaving the Members page)
+    return () => {
+      dispatch(reset());
+    };
+  }, [user, navigate, message, isError, dispatch]);
 
   if (isLoading) {
     return <Spinner />;

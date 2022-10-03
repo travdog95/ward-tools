@@ -21,6 +21,7 @@ const memberSchema = mongoose.Schema(
     templeRecommendType: String,
     isWillingToSpeak: { type: Boolean, default: true, required: true },
     isWillingToPray: { type: Boolean, default: true, required: true },
+    contactForTithing: { type: Boolean, required: true },
     marriageDate: Date,
     address1: String,
     address2: String,
