@@ -1,35 +1,21 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { calculateAge, formatDate } from "../utils/helpers";
 
-import Spinner from "../components/Spinner";
-import { getMembers } from "../features/members/memberSlice";
-
 const WardList = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const { user } = useSelector((state) => state.auth);
-  const { members, isLoading, isError, message } = useSelector((state) => state.member);
+  const { members } = useSelector((state) => state.members);
 
   useEffect(() => {
-    if (isError) {
-      toast.error(message);
-    }
-
     if (!user) {
       navigate("/login");
     }
+  }, [user, navigate]);
 
-    dispatch(getMembers());
-  }, [user, navigate, message, isError, dispatch]);
-
-  if (isLoading) {
-    return <Spinner />;
-  }
   const columns = [
     { field: "preferredName", headerName: "Preferred Name", width: 250 },
     { field: "gender", headerName: "Gender", width: 75 },

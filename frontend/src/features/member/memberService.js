@@ -40,10 +40,10 @@ const updateMember = async (id, member, token) => {
   return response.data;
 };
 
-const membersService = {
+const memberService = {
   getMembers,
   getMember,
   updateMember,
 };
 
-export default membersService;
+export default memberService;

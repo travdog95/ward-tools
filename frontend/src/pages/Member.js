@@ -4,10 +4,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 
-import ProfileForm from "../features/members/components/ProfileForm";
-import ProfileDetail from "../features/members/components/ProfileDetail";
+import ProfileForm from "../features/member/components/ProfileForm";
+import ProfileDetail from "../features/member/components/ProfileDetail";
 import Spinner from "../components/Spinner";
-import { getMember } from "../features/members/memberSlice";
+import { getMember } from "../features/member/memberSlice";
 
 const Member = () => {
   const navigate = useNavigate();
