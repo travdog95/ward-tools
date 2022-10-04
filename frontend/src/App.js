@@ -6,7 +6,7 @@ import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import DataFiles from "./pages/DataFiles";
-import Members from "./pages/Members";
+import WardList from "./pages/WardList";
 import Member from "./pages/Member";
 
 const App = () => {
@@ -20,8 +20,9 @@ const App = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/dataFiles" element={<DataFiles />} />
-            <Route path="/members" element={<Members />} />
+            <Route path="/wardlist" element={<WardList />} />
             <Route path="/member/:id" element={<Member />} />
+            <Route path="/member" element={<Member />} />
           </Routes>
         </div>
       </Router>

@@ -6,9 +6,9 @@ import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { calculateAge, formatDate } from "../utils/helpers";
 
 import Spinner from "../components/Spinner";
-import { getMembers, reset } from "../features/members/memberSlice";
+import { getMembers } from "../features/members/memberSlice";
 
-const Members = () => {
+const WardList = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -24,13 +24,7 @@ const Members = () => {
       navigate("/login");
     }
 
-    console.log("members useEffect");
     dispatch(getMembers());
-
-    //When unmounting the component (leaving the Members page)
-    return () => {
-      dispatch(reset());
-    };
   }, [user, navigate, message, isError, dispatch]);
 
   if (isLoading) {
@@ -61,7 +55,6 @@ const Members = () => {
 
   return (
     <>
-      <div>Members</div>
       <div style={{ height: 820, width: "100%" }}>
         <div style={{ display: "flex", height: "100%" }}>
           <div style={{ flexGrow: 1 }}>
@@ -84,4 +77,4 @@ const Members = () => {
   );
 };
 
-export default Members;
+export default WardList;

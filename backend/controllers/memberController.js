@@ -42,8 +42,6 @@ const addMember = asyncHandler(async (req, res) => {
 const updateMember = asyncHandler(async (req, res) => {
   const member = await Member.findById(req.params.id);
 
-  console.log(req.body);
-
   if (!member) {
     res.status(400);
     throw new Error("Member not found");

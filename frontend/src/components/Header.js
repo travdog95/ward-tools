@@ -25,7 +25,10 @@ const Header = () => {
             <Link to="/dataFiles">Data Files</Link>
           </div>
           <div className="logo">
-            <Link to="/members">Members</Link>
+            <Link to="/wardlist">Ward List</Link>
+          </div>
+          <div className="logo">
+            <Link to="/member">Members</Link>
           </div>
         </>
       ) : null}

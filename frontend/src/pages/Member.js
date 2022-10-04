@@ -7,7 +7,7 @@ import { useParams } from "react-router-dom";
 import ProfileForm from "../features/members/components/ProfileForm";
 import ProfileDetail from "../features/members/components/ProfileDetail";
 import Spinner from "../components/Spinner";
-import { getMember, reset } from "../features/members/memberSlice";
+import { getMember } from "../features/members/memberSlice";
 
 const Member = () => {
   const navigate = useNavigate();
@@ -27,11 +27,9 @@ const Member = () => {
       navigate("/login");
     }
 
-    dispatch(getMember(id));
-
-    return () => {
-      dispatch(reset());
-    };
+    if (id) {
+      dispatch(getMember(id));
+    }
   }, [user, navigate, message, isError, dispatch, id]);
 
   if (isLoading) {
@@ -41,17 +39,19 @@ const Member = () => {
   return (
     <>
       <h1>Member Profile</h1>
-      <section className="profile-container">
-        <div className="profile-header">
-          <a href={`${member.prefferedNameURL}`} target="_blank" rel="noreferrer">
-            {member.firstName} {member.lastName}
-          </a>
-        </div>
-        <div className="profile-inner-container">
-          <ProfileForm member={member} />
-          <ProfileDetail member={member} />
-        </div>
-      </section>
+      {id ? (
+        <section className="profile-container">
+          <div className="profile-header">
+            <a href={`${member.prefferedNameURL}`} target="_blank" rel="noreferrer">
+              {member.firstName} {member.lastName}
+            </a>
+          </div>
+          <div className="profile-inner-container">
+            <ProfileForm member={member} />
+            <ProfileDetail member={member} />
+          </div>
+        </section>
+      ) : null}
     </>
   );
 };

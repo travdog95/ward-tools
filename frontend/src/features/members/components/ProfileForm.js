@@ -51,7 +51,7 @@ const ProfileForm = (props) => {
         <div className="value">{member.email}</div>
       </div>
       <div className="form-row">
-        <div className="label">Birthday</div>
+        <div className="label">Birthday (Age)</div>
         <div className="value">
           {birthday} ({age})
         </div>
