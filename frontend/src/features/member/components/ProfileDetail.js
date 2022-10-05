@@ -4,8 +4,10 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 
+import Talks from "./Talks";
+
 const ProfileDetail = (props) => {
-  const { member } = props;
+  const { id } = props;
 
   const [value, setValue] = useState(new Date());
 
@@ -18,11 +20,7 @@ const ProfileDetail = (props) => {
       <div className="info-row">
         <div className="label">Talks</div>
         <div className="profile-details">
-          <div>Tithing - 24-Sep-2022</div>
-          <div>Tithing - 24-Sep-2022</div>
-          <div>Tithing - 24-Sep-2022</div>
-          <div>Tithing - 24-Sep-2022</div>
-          <div>Tithing - 24-Sep-2022</div>
+          <Talks memberId={id} />
         </div>
       </div>
       <div className="info-row">
