@@ -1,36 +1,41 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import Button from "@mui/material/Button";
 
 import { getSacramentMeetings } from "../sacramentMeetingsSlice";
-import { formatDate } from "../../../utils/helpers";
+import SacramentMeetingRow from "./SacramentMeetingRow";
+import "./sacramentMeeting.css";
 
 const YearSacramentMeetings = ({ year }) => {
   const dispatch = useDispatch();
-  const { sacramentMeetings } = useSelector((state) => state.sacramentMeetings);
+  const { sacramentMeetings, isLoading, isError, message } = useSelector(
+    (state) => state.sacramentMeetings
+  );
   useEffect(() => {
     dispatch(getSacramentMeetings(year));
   }, [dispatch, year]);
 
+  const handleAddMeeting = () => {
+    // dispatch(addSacramentMeeting);
+  };
+
+  if (isLoading) {
+    return "Loading...";
+  }
+
+  if (isError) {
+    console.error("Error loading sacrament meetings", message);
+    return "Error";
+  }
+
   return (
     <>
       <div className="sacrament-meeting-container">
+        <Button variant="contained" onClick={handleAddMeeting}>
+          Add Sacrament Meetings
+        </Button>
         {sacramentMeetings.map((meeting, index) => {
-          return (
-            <div className="sacrament-meeting-row" key={index}>
-              <div className="sacrament-meeting">
-                {formatDate(meeting.date, "LLL d")} {meeting.date} - {meeting.theme}
-              </div>
-              <div className="sacrament-meeting-talks">
-                {meeting.talks.map((talk, index) => {
-                  return (
-                    <div key={index} className="talk">
-                      {talk.talkType}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          );
+          return <SacramentMeetingRow key={index} meeting={meeting} />;
         })}
       </div>
     </>

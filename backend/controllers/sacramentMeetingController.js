@@ -29,6 +29,13 @@ const getSacramentMeetings = asyncHandler(async (req, res) => {
     })
   );
 
+  //resort sacrament meetings by date (descending), it gets jumbled up because of the async calls above
+  newMeetings.sort((a, b) => {
+    let da = new Date(a.date);
+    let db = new Date(b.date);
+    return db - da;
+  });
+
   res.status(200).json(newMeetings);
 });
 

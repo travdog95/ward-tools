@@ -28,14 +28,14 @@ const getSacramentMeeting = async (id, token) => {
 };
 
 //Update SacramentMeeting
-const updateSacramentMeeting = async (id, talk, token) => {
+const updateSacramentMeeting = async (id, meeting, token) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   };
 
-  const response = await axios.put(API_URL + id, talk, config);
+  const response = await axios.put(API_URL + id, meeting, config);
 
   return response.data;
 };

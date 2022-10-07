@@ -1,0 +1,44 @@
+.sacrament-meeting-container {
+  padding: 1rem;
+}
+
+.sacrament-meeting-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: .25rem .5rem;
+  width: 100%;
+  background-color: #eee;
+  margin-bottom: .5rem;
+}
+
+.sacrament-meeting {
+  display:flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items:center;
+  width: 30%;
+  text-align: left;
+}
+
+.sacrament-meeting-date {
+  width: 70px;
+  font-weight: 800;
+}
+
+.sacrament-meeting-talks {
+  display: flex;
+  flex-direction: column;
+}
+
+.sacrament-meeting-talk {
+  text-align: left;
+}
+
+.sacrament-meeting-theme {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}

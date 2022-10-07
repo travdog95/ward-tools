@@ -4,7 +4,6 @@ import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 
 import YearSacramentMeetings from "./YearSacramentMeetings";
-// import { formatDate } from "../../../utils/helpers";
 
 const YearTabs = () => {
   const currentYear = new Date().getFullYear();
