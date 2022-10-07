@@ -11,10 +11,10 @@ const initialState = {
 
 export const getSacramentMeeting = createAsyncThunk(
   "sacramentmeetings/get",
-  async (id, thunkAPI) => {
+  async (year, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token;
-      return await sacramentMeetingsService.getSacramentMeeting(id, token);
+      return await sacramentMeetingsService.getSacramentMeeting(year, token);
     } catch (error) {
       const message =
         (error.response && error.response.data && error.response.data.message) ||
@@ -27,10 +27,10 @@ export const getSacramentMeeting = createAsyncThunk(
 
 export const getSacramentMeetings = createAsyncThunk(
   "sacramentMeetings/getAll",
-  async (id, thunkAPI) => {
+  async (year, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token;
-      return await sacramentMeetingsService.getSacramentMeetings(id, token);
+      return await sacramentMeetingsService.getSacramentMeetings(year, token);
     } catch (error) {
       const message =
         (error.response && error.response.data && error.response.data.message) ||
@@ -87,7 +87,7 @@ export const sacramentMeetingsSlice = createSlice({
       .addCase(getSacramentMeetings.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.talk = action.payload;
+        state.sacramentMeetings = action.payload;
       })
       .addCase(getSacramentMeetings.rejected, (state, action) => {
         state.isLoading = false;

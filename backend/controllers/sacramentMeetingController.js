@@ -1,14 +1,35 @@
 const asyncHandler = require("express-async-handler");
 
 const SacramentMeeting = require("../models/sacramentMeetingModel");
+const Talk = require("../models/talkModel");
 
 // @desc    Get sacramentMeetings
 // @router  GET /api/sacramentmeetings
 // @access  Private
 const getSacramentMeetings = asyncHandler(async (req, res) => {
-  const sacramentMeetings = await SacramentMeeting.find();
+  let sacramentMeetings = [];
 
-  res.status(200).json(sacramentMeetings);
+  if (req.query.year) {
+    sacramentMeetings = await SacramentMeeting.find({
+      date: {
+        $gte: new Date(`${req.query.year}-01-01`),
+        $lte: new Date(`${req.query.year}-12-31`),
+      },
+    }).sort({ date: -1 });
+  } else {
+    sacramentMeetings = await SacramentMeeting.find();
+  }
+
+  let newMeetings = [];
+  await Promise.all(
+    sacramentMeetings.map(async (meeting) => {
+      const talks = await Talk.find({ sacramentMeeting: meeting.id }).populate("member").exec();
+      const newMeeting = { ...meeting._doc, ...{ talks } };
+      newMeetings.push(newMeeting);
+    })
+  );
+
+  res.status(200).json(newMeetings);
 });
 
 // @desc    Get sacramentMeeting

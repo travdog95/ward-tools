@@ -23,22 +23,18 @@ export const getTalk = createAsyncThunk("talks/get", async (id, thunkAPI) => {
   }
 });
 
-export const getTalksByMember = createAsyncThunk(
-  "talks/getByMember",
-  async (memberId, thunkAPI) => {
-    console.log("slice", memberId);
-    try {
-      const token = thunkAPI.getState().auth.user.token;
-      return await talksService.getTalksByMember(memberId, token);
-    } catch (error) {
-      const message =
-        (error.response && error.response.data && error.response.data.message) ||
-        error.message ||
-        error.toString();
-      return thunkAPI.rejectWithValue(message);
-    }
+export const getTalksByMember = createAsyncThunk("members/talks", async (id, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState().auth.user.token;
+    return await talksService.getTalksByMember(id, token);
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    return thunkAPI.rejectWithValue(message);
   }
-);
+});
 
 export const updateTalk = createAsyncThunk("talks/update", async (talk, thunkAPI) => {
   const id = talk.id;

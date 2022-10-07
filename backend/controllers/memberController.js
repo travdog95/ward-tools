@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 
 const Member = require("../models/memberModel");
+const Talk = require("../models/talkModel");
 
 // @desc    Get members
 // @router  GET /api/members
@@ -18,6 +19,16 @@ const getMember = asyncHandler(async (req, res) => {
   const member = await Member.findById(req.params.id);
 
   res.status(200).json(member);
+});
+
+// @desc    Get talks by member
+// @router  GET /api/members/:id/talks/
+// @access  Private
+const getTalksByMember = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const talks = await Talk.find({ member: id }).populate("sacramentMeeting").exec();
+
+  res.status(200).json(talks);
 });
 
 // @desc    Add member
@@ -91,4 +102,5 @@ module.exports = {
   patchMember,
   deleteMember,
   getMember,
+  getTalksByMember,
 };

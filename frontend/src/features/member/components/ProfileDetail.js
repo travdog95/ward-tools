@@ -8,7 +8,7 @@ import Talks from "./Talks";
 
 const ProfileDetail = (props) => {
   const { id } = props;
-
+  console.log(id);
   const [value, setValue] = useState(new Date());
 
   const handleChange = (newValue) => {

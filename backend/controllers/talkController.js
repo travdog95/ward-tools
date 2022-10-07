@@ -6,25 +6,12 @@ const Talk = require("../models/talkModel");
 // @router  GET /api/talks
 // @access  Private
 const getTalks = asyncHandler(async (req, res) => {
-  console.log(req.query);
   let talks = [];
   if (Object.keys(req.query).length === 0) {
-    console.log("query params empty");
     talks = await Talk.find();
   } else {
-    console.log("query params");
     talks = await Talk.find(req.query);
   }
-
-  res.status(200).json(talks);
-});
-
-// @desc    Get talks by member
-// @router  GET /api/talks/:member
-// @access  Private
-const getTalksByMember = asyncHandler(async (req, res) => {
-  const { memberId } = req.params;
-  const talks = await Talk.find({ member: memberId });
 
   res.status(200).json(talks);
 });
@@ -111,7 +98,6 @@ const deleteTalk = asyncHandler(async (req, res) => {
 
 module.exports = {
   getTalks,
-  getTalksByMember,
   addTalk,
   updateTalk,
   patchTalk,

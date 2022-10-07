@@ -3,18 +3,6 @@ import axios from "axios";
 
 const API_URL = "/api/talks/";
 
-//Get Talks
-const getTalksByMember = async (memberId, token) => {
-  const config = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
-  const response = await axios.get(API_URL + "member/" + memberId, config);
-
-  return response.data;
-};
-
 //Get Talk
 const getTalk = async (id, token) => {
   const config = {
@@ -23,6 +11,18 @@ const getTalk = async (id, token) => {
     },
   };
   const response = await axios.get(API_URL + id, config);
+
+  return response.data;
+};
+
+//Get Talks by member
+const getTalksByMember = async (memberId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.get("/api/members/" + memberId + "/talks/", config);
 
   return response.data;
 };
@@ -41,9 +41,9 @@ const updateTalk = async (id, talk, token) => {
 };
 
 const talksService = {
-  getTalksByMember,
   getTalk,
   updateTalk,
+  getTalksByMember,
 };
 
 export default talksService;

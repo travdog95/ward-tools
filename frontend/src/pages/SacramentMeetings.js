@@ -1,7 +1,13 @@
 import React from "react";
+import YearTabs from "../features/sacramentMeetings/components/YearTabs";
 
 const SacramentMeetings = () => {
-  return <div>SacramentMeetings</div>;
+  return (
+    <>
+      <h1>Sacrament Meetings</h1>
+      <YearTabs />
+    </>
+  );
 };
 
 export default SacramentMeetings;

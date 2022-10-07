@@ -4,13 +4,13 @@ import axios from "axios";
 const API_URL = "/api/sacramentmeetings/";
 
 //Get SacramentMeetings by Member
-const getSacramentMeetings = async (token) => {
+const getSacramentMeetings = async (year, token) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   };
-  const response = await axios.get(API_URL, config);
+  const response = await axios.get(API_URL + "?year=" + year, config);
 
   return response.data;
 };

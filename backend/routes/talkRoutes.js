@@ -7,12 +7,10 @@ const {
   patchTalk,
   deleteTalk,
   getTalk,
-  getTalksByMember,
 } = require("../controllers/talkController");
 const { protect } = require("../middleware/authMiddleware");
 
 router.route("/").get(protect, getTalks).post(protect, addTalk);
-router.route("/member/:memberId").get(protect, getTalksByMember);
 
 router
   .route("/:id")
