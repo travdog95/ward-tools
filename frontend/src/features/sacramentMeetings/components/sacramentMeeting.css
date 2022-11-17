@@ -18,22 +18,13 @@
   flex-direction: row;
   justify-content: flex-start;
   align-items:center;
-  width: 30%;
   text-align: left;
+  width: 400px;
 }
 
 .sacrament-meeting-date {
-  width: 70px;
+  width: 65px;
   font-weight: 800;
-}
-
-.sacrament-meeting-talks {
-  display: flex;
-  flex-direction: column;
-}
-
-.sacrament-meeting-talk {
-  text-align: left;
 }
 
 .sacrament-meeting-theme {
@@ -41,4 +32,22 @@
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
+  margin: 0 1rem;
+}
+
+.sacrament-meeting-saving-indicator {
+  display: grid;
+  place-items: center;
+  width: 15px;
+  margin-left: .5rem;
+}
+
+.sacrament-meeting-talks-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.sacrament-meeting-talk {
+  text-align: left;
 }

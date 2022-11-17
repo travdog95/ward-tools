@@ -2,17 +2,16 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "@mui/material/Button";
 
-import { getSacramentMeetings } from "../sacramentMeetingsSlice";
+import { getSacramentMeetingsByYear } from "../sacramentMeetingsSlice";
 import SacramentMeetingRow from "./SacramentMeetingRow";
 import "./sacramentMeeting.css";
 
 const YearSacramentMeetings = ({ year }) => {
   const dispatch = useDispatch();
-  const { sacramentMeetings, isLoading, isError, message } = useSelector(
-    (state) => state.sacramentMeetings
-  );
+  const { byYear, isLoading, isError, message } = useSelector((state) => state.sacramentMeetings);
+
   useEffect(() => {
-    dispatch(getSacramentMeetings(year));
+    dispatch(getSacramentMeetingsByYear(year));
   }, [dispatch, year]);
 
   const handleAddMeeting = () => {
@@ -23,6 +22,7 @@ const YearSacramentMeetings = ({ year }) => {
     return "Loading...";
   }
 
+  console.log(byYear[year]);
   if (isError) {
     console.error("Error loading sacrament meetings", message);
     return "Error";
@@ -34,9 +34,10 @@ const YearSacramentMeetings = ({ year }) => {
         <Button variant="contained" onClick={handleAddMeeting}>
           Add Sacrament Meetings
         </Button>
-        {sacramentMeetings.map((meeting, index) => {
-          return <SacramentMeetingRow key={index} meeting={meeting} />;
-        })}
+        {byYear[year] &&
+          byYear[year].map((meeting, index) => {
+            return <SacramentMeetingRow key={index} meeting={meeting} />;
+          })}
       </div>
     </>
   );

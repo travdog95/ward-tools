@@ -9,34 +9,36 @@ const Talk = require("../models/talkModel");
 const getSacramentMeetings = asyncHandler(async (req, res) => {
   let sacramentMeetings = [];
 
-  if (req.query.year) {
-    sacramentMeetings = await SacramentMeeting.find({
-      date: {
-        $gte: new Date(`${req.query.year}-01-01`),
-        $lte: new Date(`${req.query.year}-12-31`),
-      },
-    }).sort({ date: -1 });
-  } else {
-    sacramentMeetings = await SacramentMeeting.find();
-  }
+  const searchYear = req.query.year ? req.query.year : 2022;
 
-  let newMeetings = [];
+  sacramentMeetings = await SacramentMeeting.find({
+    date: {
+      $gte: new Date(`${searchYear}-01-01`),
+      $lte: new Date(`${searchYear}-12-31`),
+    },
+  }).sort({ date: -1 });
+
+  let sacramentMeetingsExtended = [];
   await Promise.all(
     sacramentMeetings.map(async (meeting) => {
       const talks = await Talk.find({ sacramentMeeting: meeting.id }).populate("member").exec();
       const newMeeting = { ...meeting._doc, ...{ talks } };
-      newMeetings.push(newMeeting);
+      sacramentMeetingsExtended.push(newMeeting);
     })
   );
 
   //resort sacrament meetings by date (descending), it gets jumbled up because of the async calls above
-  newMeetings.sort((a, b) => {
+  sacramentMeetingsExtended.sort((a, b) => {
     let da = new Date(a.date);
     let db = new Date(b.date);
     return db - da;
   });
 
-  res.status(200).json(newMeetings);
+  const meetingsByYear = {};
+
+  meetingsByYear[searchYear] = sacramentMeetingsExtended;
+
+  res.status(200).json(meetingsByYear);
 });
 
 // @desc    Get sacramentMeeting

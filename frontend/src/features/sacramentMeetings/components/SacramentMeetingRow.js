@@ -4,6 +4,7 @@ import TextField from "@mui/material/TextField";
 import CircularProgress from "@mui/material/CircularProgress";
 
 import { updateSacramentMeeting } from "./sacramentMeetingSlice";
+import AddTalk from "../../talks/components/AddTalk";
 import { formatDate } from "../../../utils/helpers";
 
 const SacramentMeetingRow = ({ meeting }) => {
@@ -47,18 +48,25 @@ const SacramentMeetingRow = ({ meeting }) => {
             onChange={handleOnThemeChange}
             onBlur={handleOnThemeBlur}
           />
-          {isLoading && loadingMeetingId === meeting._id ? <CircularProgress size={20} /> : null}
+          <div className="sacrament-meeting-saving-indicator">
+            {isLoading && loadingMeetingId === meeting._id ? <CircularProgress size={20} /> : null}
+          </div>
         </div>
       </div>
-      <div className="sacrament-meeting-talks">
-        {meeting.talks.map((talk, index) => {
-          return (
-            <div key={index} className="sacrament-meeting-talk">
-              {talk.talkType} - {talk.member.firstName} {talk.member.lastName} -
-              {talk.topic ? talk.topic : "no topic"}
-            </div>
-          );
-        })}
+      <div className="sacrament-meeting-talks-container">
+        <div className="sacrament-meeting-add-talk">
+          <AddTalk meeting={meeting} />
+        </div>
+        <div className="sacrament-meeting-talks">
+          {meeting.talks.map((talk, index) => {
+            return (
+              <div key={index} className="sacrament-meeting-talk">
+                {talk.talkType} - {talk.member.firstName} {talk.member.lastName} -
+                {talk.topic ? talk.topic : "no topic"}
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import sacramentMeetingsService from "../sacramentMeetingsService";
+import talksService from "../../talks/talksService";
 
 const initialState = {
   isError: false,
@@ -26,6 +27,19 @@ export const updateSacramentMeeting = createAsyncThunk(
   }
 );
 
+export const addTalk = createAsyncThunk("sacramentMeetings/addTalk", async (talk, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState().auth.user.token;
+    return await talksService.addTalk(talk, token);
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
 export const sacramentMeetingSlice = createSlice({
   name: "sacramentMeeting",
   initialState,
@@ -45,6 +59,19 @@ export const sacramentMeetingSlice = createSlice({
         state.sacramentMeeting = action.payload;
       })
       .addCase(updateSacramentMeeting.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(addTalk.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(addTalk.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.sacramentMeeting.talks.push(action.payload);
+      })
+      .addCase(addTalk.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

@@ -27,6 +27,19 @@ const getTalksByMember = async (memberId, token) => {
   return response.data;
 };
 
+//Add Talk
+const addTalk = async (talk, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await axios.post(API_URL, talk, config);
+
+  return response.data;
+};
+
 //Update Talk
 const updateTalk = async (id, talk, token) => {
   const config = {
@@ -44,6 +57,7 @@ const talksService = {
   getTalk,
   updateTalk,
   getTalksByMember,
+  addTalk,
 };
 
 export default talksService;

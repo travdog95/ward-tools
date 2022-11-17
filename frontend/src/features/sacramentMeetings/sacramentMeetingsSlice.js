@@ -6,7 +6,7 @@ const initialState = {
   isSuccess: false,
   isLoading: false,
   message: "",
-  sacramentMeetings: [],
+  byYear: {},
 };
 
 export const getSacramentMeeting = createAsyncThunk(
@@ -25,7 +25,7 @@ export const getSacramentMeeting = createAsyncThunk(
   }
 );
 
-export const getSacramentMeetings = createAsyncThunk(
+export const getSacramentMeetingsByYear = createAsyncThunk(
   "sacramentMeetings/byYear",
   async (year, thunkAPI) => {
     try {
@@ -64,15 +64,15 @@ export const sacramentMeetingsSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
       })
-      .addCase(getSacramentMeetings.pending, (state) => {
+      .addCase(getSacramentMeetingsByYear.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getSacramentMeetings.fulfilled, (state, action) => {
+      .addCase(getSacramentMeetingsByYear.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.sacramentMeetings = action.payload;
+        state.byYear = action.payload;
       })
-      .addCase(getSacramentMeetings.rejected, (state, action) => {
+      .addCase(getSacramentMeetingsByYear.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
