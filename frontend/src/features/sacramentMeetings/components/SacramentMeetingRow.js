@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import TextField from "@mui/material/TextField";
 import CircularProgress from "@mui/material/CircularProgress";
 
-import { updateSacramentMeeting } from "./sacramentMeetingSlice";
-import AddTalk from "../../talks/components/AddTalk";
+import { updateSacramentMeeting } from "../sacramentMeetingsSlice.js";
+import AddTalk from "../components/AddTalk";
 import { formatDate } from "../../../utils/helpers";
 
 const SacramentMeetingRow = ({ meeting }) => {
@@ -14,7 +14,8 @@ const SacramentMeetingRow = ({ meeting }) => {
   const [updatedTheme, setUpdatedTheme] = useState(meeting.theme);
   const [loadingMeetingId, setLoadingMeetingId] = useState(null);
 
-  const { isLoading, isError, message } = useSelector((state) => state.sacramentMeeting);
+  const { isLoading, isError, message } = useSelector((state) => state.sacramentMeetings);
+  const { members } = useSelector((state) => state.members);
 
   const handleOnThemeChange = (e) => {
     setTheme(e.target.value);
@@ -59,9 +60,10 @@ const SacramentMeetingRow = ({ meeting }) => {
         </div>
         <div className="sacrament-meeting-talks">
           {meeting.talks.map((talk, index) => {
+            const member = members.filter((m) => m._id === talk.member);
             return (
               <div key={index} className="sacrament-meeting-talk">
-                {talk.talkType} - {talk.member.firstName} {talk.member.lastName} -
+                {talk.talkType} - {member[0].firstName} {member[0].lastName} -
                 {talk.topic ? talk.topic : "no topic"}
               </div>
             );

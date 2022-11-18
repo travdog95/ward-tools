@@ -7,6 +7,8 @@ const initialState = {
   isLoading: false,
   message: "",
   byYear: {},
+  currentTabYear: 0,
+  currentMeetingId: 0,
 };
 
 export const getSacramentMeeting = createAsyncThunk(
@@ -41,6 +43,36 @@ export const getSacramentMeetingsByYear = createAsyncThunk(
   }
 );
 
+export const updateSacramentMeeting = createAsyncThunk(
+  "sacramentMeetings/update",
+  async (meeting, thunkAPI) => {
+    const id = meeting.id;
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await sacramentMeetingsService.updateSacramentMeeting(id, meeting, token);
+    } catch (error) {
+      const message =
+        (error.response && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const addTalk = createAsyncThunk("sacramentMeetings/addTalk", async (talk, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState().auth.user.token;
+    return await sacramentMeetingsService.addTalk(talk, token);
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
 export const sacramentMeetingsSlice = createSlice({
   name: "sacramentMeetings",
   initialState,
@@ -68,11 +100,43 @@ export const sacramentMeetingsSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(getSacramentMeetingsByYear.fulfilled, (state, action) => {
+        const tabYear = parseInt(action.meta.arg);
         state.isLoading = false;
         state.isSuccess = true;
-        state.byYear = action.payload;
+        state.byYear[tabYear] = action.payload[tabYear];
+        state.currentTabYear = tabYear;
       })
       .addCase(getSacramentMeetingsByYear.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(updateSacramentMeeting.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateSacramentMeeting.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.sacramentMeeting = action.payload;
+      })
+      .addCase(updateSacramentMeeting.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(addTalk.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(addTalk.fulfilled, (state, action) => {
+        const meetingId = action.payload.sacramentMeeting;
+        const sacramentMeetingIndex = state.byYear[state.currentTabYear].findIndex(
+          (m) => m._id === meetingId
+        );
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.byYear[state.currentTabYear][sacramentMeetingIndex].talks.push(action.payload);
+      })
+      .addCase(addTalk.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

@@ -18,9 +18,7 @@ const ProfileDetail = (props) => {
     <div className="profile-info">
       <div className="info-row">
         <div className="label">Talks</div>
-        <div className="profile-details">
-          <Talks memberId={id} />
-        </div>
+        <div className="profile-details">{/* <Talks memberId={id} /> */}</div>
       </div>
       <div className="info-row">
         <div className="label">Prayers</div>

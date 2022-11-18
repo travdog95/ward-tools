@@ -40,10 +40,24 @@ const updateSacramentMeeting = async (id, meeting, token) => {
   return response.data;
 };
 
+//Add Talk
+const addTalk = async (talk, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await axios.post("/api/talks", talk, config);
+
+  return response.data;
+};
+
 const sacramentMeetingsService = {
   getSacramentMeetings,
   getSacramentMeeting,
   updateSacramentMeeting,
+  addTalk,
 };
 
 export default sacramentMeetingsService;

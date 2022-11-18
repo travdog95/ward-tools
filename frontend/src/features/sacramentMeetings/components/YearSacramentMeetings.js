@@ -23,6 +23,7 @@ const YearSacramentMeetings = ({ year }) => {
   }
 
   console.log(byYear[year]);
+
   if (isError) {
     console.error("Error loading sacrament meetings", message);
     return "Error";

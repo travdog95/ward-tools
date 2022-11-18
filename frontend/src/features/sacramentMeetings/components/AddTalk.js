@@ -6,7 +6,7 @@ import Button from "@mui/material/Button";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import AutoComplete from "@mui/material/AutoComplete";
 
-import { addTalk } from "../../sacramentMeetings/components/sacramentMeetingSlice";
+import { addTalk } from "../../sacramentMeetings/sacramentMeetingsSlice";
 import "./addTalk.css";
 
 const AddTalk = ({ meeting }) => {
@@ -15,7 +15,7 @@ const AddTalk = ({ meeting }) => {
   const [topic, setTopic] = useState("");
   const [member, setMember] = useState(null);
 
-  const { isLoading, isError, message } = useSelector((state) => state.talks);
+  const { isLoading, isError, message } = useSelector((state) => state.sacramentMeetings);
   const { members } = useSelector((state) => state.members);
 
   const handleAddTalk = () => {
@@ -56,6 +56,7 @@ const AddTalk = ({ meeting }) => {
         </Button>
         <div className="adding-talk-indicator">
           {isLoading ? <CircularProgress size={20} /> : null}
+          {/* <CircularProgress size={20} /> */}
         </div>
       </div>
     </>

@@ -8,8 +8,9 @@ const Talk = require("../models/talkModel");
 // @access  Private
 const getSacramentMeetings = asyncHandler(async (req, res) => {
   let sacramentMeetings = [];
+  const currentYear = new Date().getFullYear();
 
-  const searchYear = req.query.year ? req.query.year : 2022;
+  const searchYear = req.query.year ? req.query.year : currentYear;
 
   sacramentMeetings = await SacramentMeeting.find({
     date: {
@@ -21,7 +22,8 @@ const getSacramentMeetings = asyncHandler(async (req, res) => {
   let sacramentMeetingsExtended = [];
   await Promise.all(
     sacramentMeetings.map(async (meeting) => {
-      const talks = await Talk.find({ sacramentMeeting: meeting.id }).populate("member").exec();
+      // const talks = await Talk.find({ sacramentMeeting: meeting.id }).populate("member").exec();
+      const talks = await Talk.find({ sacramentMeeting: meeting.id });
       const newMeeting = { ...meeting._doc, ...{ talks } };
       sacramentMeetingsExtended.push(newMeeting);
     })
