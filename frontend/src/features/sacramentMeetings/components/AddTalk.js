@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import TextField from "@mui/material/TextField";
-import CircularProgress from "@mui/material/CircularProgress";
-import Button from "@mui/material/Button";
+import { LoadingButton } from "@mui/lab";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import AutoComplete from "@mui/material/AutoComplete";
 
-import { addTalk } from "../../sacramentMeetings/sacramentMeetingsSlice";
+import { addTalk } from "../../meetings/meetingsSlice";
 import "./addTalk.css";
 
 const AddTalk = ({ meeting }) => {
@@ -15,12 +14,14 @@ const AddTalk = ({ meeting }) => {
   const [topic, setTopic] = useState("");
   const [member, setMember] = useState(null);
 
-  const { isLoading, isError, message } = useSelector((state) => state.sacramentMeetings);
+  const { addingTalk, currentMeetingId, isError, message } = useSelector((state) => state.meetings);
   const { members } = useSelector((state) => state.members);
 
   const handleAddTalk = () => {
-    const talk = { topic, talkType: "Adult", member: member._id, sacramentMeeting: meeting._id };
-    dispatch(addTalk(talk));
+    if (member && topic) {
+      const talk = { topic, talkType: "Adult", member: member._id, sacramentMeeting: meeting._id };
+      dispatch(addTalk(talk));
+    }
   };
 
   const handleOnTopicChange = (e) => {
@@ -31,6 +32,12 @@ const AddTalk = ({ meeting }) => {
     setMember(searchValue);
   };
 
+  if (isError) {
+    console.error("Error adding talk.", message);
+    return "Error";
+  }
+
+  const loading = addingTalk && currentMeetingId === meeting._id;
   return (
     <>
       <div className="add-talk-container">
@@ -51,13 +58,15 @@ const AddTalk = ({ meeting }) => {
           onChange={handleOnTopicChange}
           className="talk-topic"
         />
-        <Button variant="outlined" startIcon={<AddCircleIcon />} onClick={handleAddTalk}>
+        <LoadingButton
+          loading={loading}
+          loadingPosition="start"
+          onClick={handleAddTalk}
+          variant="outlined"
+          startIcon={<AddCircleIcon />}
+        >
           Add
-        </Button>
-        <div className="adding-talk-indicator">
-          {isLoading ? <CircularProgress size={20} /> : null}
-          {/* <CircularProgress size={20} /> */}
-        </div>
+        </LoadingButton>
       </div>
     </>
   );

@@ -2,9 +2,11 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import TextField from "@mui/material/TextField";
 import CircularProgress from "@mui/material/CircularProgress";
+import { LoadingButton } from "@mui/lab";
 
-import { updateSacramentMeeting } from "../sacramentMeetingsSlice.js";
-import AddTalk from "../components/AddTalk";
+import { updateMeeting } from "../../meetings/meetingsSlice";
+import AddTalk from "./AddTalk";
+import TalkRow from "./TalkRow";
 import { formatDate } from "../../../utils/helpers";
 
 const SacramentMeetingRow = ({ meeting }) => {
@@ -12,9 +14,10 @@ const SacramentMeetingRow = ({ meeting }) => {
 
   const [theme, setTheme] = useState(meeting.theme);
   const [updatedTheme, setUpdatedTheme] = useState(meeting.theme);
-  const [loadingMeetingId, setLoadingMeetingId] = useState(null);
 
-  const { isLoading, isError, message } = useSelector((state) => state.sacramentMeetings);
+  const { isError, message, updatingMeeting, currentMeetingId } = useSelector(
+    (state) => state.meetings
+  );
   const { members } = useSelector((state) => state.members);
 
   const handleOnThemeChange = (e) => {
@@ -25,13 +28,13 @@ const SacramentMeetingRow = ({ meeting }) => {
     const newTheme = e.target.value;
     if (updatedTheme !== newTheme) {
       setUpdatedTheme(newTheme);
-      setLoadingMeetingId(meeting._id);
-      dispatch(updateSacramentMeeting({ id: meeting._id, theme: newTheme }));
+      dispatch(updateMeeting({ id: meeting._id, theme: newTheme }));
     }
   };
 
-  if (!isLoading && loadingMeetingId) {
-    setLoadingMeetingId(null);
+  if (isError) {
+    console.error("Error loading sacrament meeting.", message);
+    return "Error";
   }
 
   return (
@@ -50,7 +53,9 @@ const SacramentMeetingRow = ({ meeting }) => {
             onBlur={handleOnThemeBlur}
           />
           <div className="sacrament-meeting-saving-indicator">
-            {isLoading && loadingMeetingId === meeting._id ? <CircularProgress size={20} /> : null}
+            {updatingMeeting && currentMeetingId === meeting._id ? (
+              <CircularProgress size={20} />
+            ) : null}
           </div>
         </div>
       </div>
@@ -61,12 +66,7 @@ const SacramentMeetingRow = ({ meeting }) => {
         <div className="sacrament-meeting-talks">
           {meeting.talks.map((talk, index) => {
             const member = members.filter((m) => m._id === talk.member);
-            return (
-              <div key={index} className="sacrament-meeting-talk">
-                {talk.talkType} - {member[0].firstName} {member[0].lastName} -
-                {talk.topic ? talk.topic : "no topic"}
-              </div>
-            );
+            return <TalkRow key={index} talk={talk} member={member[0]} />;
           })}
         </div>
       </div>
