@@ -93,7 +93,7 @@ const deleteTalk = asyncHandler(async (req, res) => {
 
   await talk.remove();
 
-  res.status(200).json({ id: req.params.id });
+  res.status(200).json(talk);
 });
 
 module.exports = {

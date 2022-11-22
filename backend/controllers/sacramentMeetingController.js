@@ -40,7 +40,7 @@ const getSacramentMeetings = asyncHandler(async (req, res) => {
 
   meetingsByYear[searchYear] = sacramentMeetingsExtended;
 
-  res.status(200).json(meetingsByYear);
+  res.status(200).json(sacramentMeetingsExtended);
 });
 
 // @desc    Get sacramentMeeting
