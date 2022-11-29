@@ -1,5 +1,5 @@
 import React from "react";
-import YearTabs from "../features/sacramentMeetings/components/YearTabs";
+import YearTabs from "../features/meetings/components/YearTabs";
 
 const SacramentMeetings = () => {
   return (

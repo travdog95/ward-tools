@@ -1,4 +1,4 @@
-.sacrament-meeting-container {
+.sacrament-meetings-container {
   padding: 1rem;
 }
 
@@ -7,17 +7,17 @@
   flex-direction: row;
   justify-content: flex-start;
   align-items: flex-start;
-  padding: .25rem .5rem;
+  padding: 0.25rem 0.5rem;
   width: 100%;
   background-color: #eee;
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
 }
 
 .sacrament-meeting {
-  display:flex;
+  display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  align-items:center;
+  align-items: center;
   text-align: left;
   width: 400px;
 }
@@ -27,19 +27,11 @@
   font-weight: 800;
 }
 
-.sacrament-meeting-theme {
+.sacrament-meeting-details-container {
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  margin: 0 1rem;
-}
-
-.sacrament-meeting-saving-indicator {
-  display: grid;
-  place-items: center;
-  width: 15px;
-  margin-left: .5rem;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
 }
 
 .sacrament-meeting-talks-container {
@@ -49,5 +41,9 @@
 }
 
 .sacrament-meeting-talk {
+  text-align: left;
+}
+
+.sacrament-meeting-prayer-container {
   text-align: left;
 }

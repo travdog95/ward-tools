@@ -1,17 +1,27 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { getMeetingsByYear } from "../../meetings/meetingsSlice";
+import { getMeetingsByYear, addMeetingsByYear } from "../meetingsSlice";
 import SacramentMeetingRow from "./SacramentMeetingRow";
 import "./sacramentMeeting.css";
 
 const YearSacramentMeetings = ({ year }) => {
   const dispatch = useDispatch();
-  const { meetings, isLoading, isError, message } = useSelector((state) => state.meetings);
+  const { meetings, isLoading, isError, message, addingMeetings } = useSelector(
+    (state) => state.meetings
+  );
 
   useEffect(() => {
     dispatch(getMeetingsByYear(year));
   }, [dispatch, year]);
+
+  const addMeetings = () => {
+    dispatch(addMeetingsByYear(year)).then(() => dispatch(getMeetingsByYear(year)));
+  };
+
+  if (addingMeetings) {
+    return "Adding meetings...";
+  }
 
   if (isLoading) {
     return "Loading...";
@@ -24,10 +34,18 @@ const YearSacramentMeetings = ({ year }) => {
 
   return (
     <>
-      <div className="sacrament-meeting-container">
+      <div className="sacrament-meetings-container">
         {meetings.allIds.map((meetingId, index) => {
           return <SacramentMeetingRow key={index} meeting={meetings.byId[meetingId]} />;
         })}
+
+        {meetings.allIds.length === 0 ? (
+          <>
+            <button className="btn" onClick={addMeetings}>
+              Add Meetings
+            </button>
+          </>
+        ) : null}
       </div>
     </>
   );

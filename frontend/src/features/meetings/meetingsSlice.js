@@ -8,6 +8,8 @@ const initialState = {
   updatingMeeting: false,
   addingTalk: false,
   deletingTalk: false,
+  updatingTalk: false,
+  addingMeetings: false,
   message: "",
   meetings: {
     byId: {},
@@ -96,6 +98,36 @@ export const deleteTalk = createAsyncThunk("meetings/deleteTalk", async (talk, t
   }
 });
 
+export const updateTalk = createAsyncThunk("meetings/updateTalk", async (talk, thunkAPI) => {
+  const id = talk.id;
+  try {
+    const token = thunkAPI.getState().auth.user.token;
+    return await meetingsService.updateTalk(id, talk, token);
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
+export const addMeetingsByYear = createAsyncThunk(
+  "meetings/addMeetingsByYear",
+  async (year, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await meetingsService.addMeetingsByYear(year, token);
+    } catch (error) {
+      const message =
+        (error.response && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const meetingsSlice = createSlice({
   name: "meetings",
   initialState,
@@ -138,6 +170,20 @@ export const meetingsSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
       })
+      .addCase(addMeetingsByYear.pending, (state, action) => {
+        // state.currentMeetingId = action.meta.arg.id;
+        state.addingMeetings = true;
+      })
+      .addCase(addMeetingsByYear.fulfilled, (state, action) => {
+        state.addingMeetings = false;
+        state.isSuccess = true;
+        // state.meetings = action.payload;
+      })
+      .addCase(addMeetingsByYear.rejected, (state, action) => {
+        state.addingMeetings = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
       .addCase(updateMeeting.pending, (state, action) => {
         state.currentMeetingId = action.meta.arg.id;
         state.updatingMeeting = true;
@@ -165,6 +211,20 @@ export const meetingsSlice = createSlice({
         state.meetings.byId[meetingId].talks.push(action.payload);
       })
       .addCase(addTalk.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(updateTalk.pending, (state, action) => {
+        state.currentTalkId = action.meta.arg.id;
+        state.updatingTalk = true;
+      })
+      .addCase(updateTalk.fulfilled, (state, action) => {
+        state.updatingTalk = false;
+        state.isSuccess = true;
+        state.currentTalkId = 0;
+      })
+      .addCase(updateTalk.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

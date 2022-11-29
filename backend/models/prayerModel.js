@@ -23,4 +23,4 @@ const prayerSchema = mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("Prayer", talkSchema);
+module.exports = mongoose.model("Prayer", prayerSchema);

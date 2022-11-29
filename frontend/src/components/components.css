@@ -1,0 +1,14 @@
+.auto-update-text-field-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 0 1rem;
+}
+
+.auto-update-text-field-saving-indicator {
+  display: grid;
+  place-items: center;
+  width: 15px;
+  margin-left: 0.5rem;
+}

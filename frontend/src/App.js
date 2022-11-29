@@ -14,6 +14,7 @@ import Member from "./pages/Member";
 import SacramentMeetings from "./pages/SacramentMeetings";
 import { getMembers } from "./features/members/membersSlice";
 import Spinner from "./components/Spinner";
+import "./components/components.css";
 
 const App = () => {
   const dispatch = useDispatch();

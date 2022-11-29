@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import TextField from "@mui/material/TextField";
 import { LoadingButton } from "@mui/lab";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import AutoComplete from "@mui/material/AutoComplete";
 
-import { addTalk } from "../../meetings/meetingsSlice";
+import { addTalk } from "../meetingsSlice";
+import MemberAutoComplete from "../../../components/MemberAutoComplete";
 import "./addTalk.css";
 
 const AddTalk = ({ meeting }) => {
@@ -21,6 +21,8 @@ const AddTalk = ({ meeting }) => {
     if (member && topic) {
       const talk = { topic, talkType: "Adult", member: member._id, sacramentMeeting: meeting._id };
       dispatch(addTalk(talk));
+      setTopic("");
+      setMember(null);
     }
   };
 
@@ -41,13 +43,11 @@ const AddTalk = ({ meeting }) => {
   return (
     <>
       <div className="add-talk-container">
-        <AutoComplete
-          options={members}
-          size="small"
-          getOptionLabel={(option) => option.preferredName}
-          renderInput={(params) => <TextField {...params} label="Member" />}
-          onChange={(event, newValue) => handleSearch(newValue)}
-          value={member}
+        <MemberAutoComplete
+          member={member}
+          members={members}
+          onChange={handleSearch}
+          label="Speaker"
           className="talk-member"
         />
         <TextField
@@ -64,6 +64,7 @@ const AddTalk = ({ meeting }) => {
           onClick={handleAddTalk}
           variant="outlined"
           startIcon={<AddCircleIcon />}
+          sx={{ paddingLeft: 3, paddingRight: 3 }}
         >
           Add
         </LoadingButton>

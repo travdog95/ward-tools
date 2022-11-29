@@ -1,28 +1,40 @@
 const asyncHandler = require("express-async-handler");
+const { isBefore, nextSunday, addWeeks, format } = require("date-fns");
 
 const SacramentMeeting = require("../models/sacramentMeetingModel");
 const Talk = require("../models/talkModel");
 
-// @desc    Get sacramentMeetings
-// @router  GET /api/sacramentmeetings
-// @access  Private
-const getSacramentMeetings = asyncHandler(async (req, res) => {
-  let sacramentMeetings = [];
-  const currentYear = new Date().getFullYear();
+const getSundays = (year) => {
+  const sundays = [];
+  const startDate = new Date(year, 0, 1);
+  const endDate = new Date(year, 11, 31);
+  let currentSunday = nextSunday(startDate);
 
-  const searchYear = req.query.year ? req.query.year : currentYear;
+  while (isBefore(currentSunday, endDate)) {
+    sundays.push(currentSunday);
+    currentSunday = addWeeks(currentSunday, 1);
+  }
+
+  return sundays;
+};
+
+// @desc    Get sacramentMeetings
+// @router  GET /api/sacramentmeetings/year/:year
+// @access  Private
+const getSacramentMeetingsByYear = asyncHandler(async (req, res) => {
+  let sacramentMeetings = [];
+  const year = req.params.year;
 
   sacramentMeetings = await SacramentMeeting.find({
     date: {
-      $gte: new Date(`${searchYear}-01-01`),
-      $lte: new Date(`${searchYear}-12-31`),
+      $gte: new Date(`${year}-01-01`),
+      $lte: new Date(`${year}-12-31`),
     },
   }).sort({ date: -1 });
 
   let sacramentMeetingsExtended = [];
   await Promise.all(
     sacramentMeetings.map(async (meeting) => {
-      // const talks = await Talk.find({ sacramentMeeting: meeting.id }).populate("member").exec();
       const talks = await Talk.find({ sacramentMeeting: meeting.id });
       const newMeeting = { ...meeting._doc, ...{ talks } };
       sacramentMeetingsExtended.push(newMeeting);
@@ -38,7 +50,7 @@ const getSacramentMeetings = asyncHandler(async (req, res) => {
 
   const meetingsByYear = {};
 
-  meetingsByYear[searchYear] = sacramentMeetingsExtended;
+  meetingsByYear[year] = sacramentMeetingsExtended;
 
   res.status(200).json(sacramentMeetingsExtended);
 });
@@ -125,11 +137,59 @@ const deleteSacramentMeeting = asyncHandler(async (req, res) => {
   res.status(200).json({ id: req.params.id });
 });
 
+// @desc    Add sacramentMeetings by year
+// @router  POST /api/sacramentmeetings/year/:year
+// @access  Private
+const addSacramentMeetingsByYear = asyncHandler(async (req, res) => {
+  const year = req.params.year;
+  const sundays = getSundays(year);
+  const sacramentMeetings = [];
+
+  await Promise.all(
+    sundays.map(async (sunday) => {
+      //Check to see if meeting exists
+      const meetingExists = await SacramentMeeting.find({
+        date: format(sunday, "yyyy-LL-dd"),
+      });
+
+      //If meeting doesn't exist, create it
+      if (meetingExists.length === 0) {
+        const sacramentMeeting = await SacramentMeeting.create({
+          theme: "",
+          date: sunday,
+        });
+
+        sacramentMeetings.push(sacramentMeeting);
+      }
+    })
+  );
+
+  res.status(200).json(sacramentMeetings);
+});
+
+// @desc    Delete sacramentMeetings by year
+// @router  DELETE /api/sacramentmeetings/year/:year
+// @access  Private
+const deleteSacramentMeetingsByYear = asyncHandler(async (req, res) => {
+  const year = req.params.year;
+
+  const results = await SacramentMeeting.remove({
+    date: {
+      $gte: new Date(`${year}-01-01`),
+      $lte: new Date(`${year}-12-31`),
+    },
+  });
+
+  res.status(200).json(results);
+});
+
 module.exports = {
-  getSacramentMeetings,
+  getSacramentMeetingsByYear,
   addSacramentMeeting,
   updateSacramentMeeting,
   patchSacramentMeeting,
   deleteSacramentMeeting,
   getSacramentMeeting,
+  addSacramentMeetingsByYear,
+  deleteSacramentMeetingsByYear,
 };

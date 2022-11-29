@@ -20,6 +20,10 @@ const talkSchema = mongoose.Schema(
       required: true,
       ref: "SacramentMeeting",
     },
+    rank: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,

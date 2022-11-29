@@ -1,0 +1,16 @@
+.sacrament-meeting-talk-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
+}
+
+.sacrament-meeting-speaker {
+  width: 200px;
+  text-align: left;
+}
+
+.sacrament-meeting-speaker-topic {
+  width: 350px;
+}

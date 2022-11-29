@@ -1,16 +1,26 @@
 const express = require("express");
 const router = express.Router();
 const {
-  getSacramentMeetings,
+  getSacramentMeeting,
   addSacramentMeeting,
   updateSacramentMeeting,
   patchSacramentMeeting,
   deleteSacramentMeeting,
-  getSacramentMeeting,
+  getSacramentMeetingsByYear,
+  addSacramentMeetingsByYear,
+  deleteSacramentMeetingsByYear,
 } = require("../controllers/sacramentMeetingController");
 const { protect } = require("../middleware/authMiddleware");
 
-router.route("/").get(protect, getSacramentMeetings).post(protect, addSacramentMeeting);
+router
+  .route("/")
+  // .get(protect, getSacramentMeetings)
+  .post(protect, addSacramentMeeting);
+router
+  .route("/year/:year")
+  .get(protect, getSacramentMeetingsByYear)
+  .delete(protect, deleteSacramentMeetingsByYear)
+  .post(protect, addSacramentMeetingsByYear);
 
 router
   .route("/:id")
