@@ -10,6 +10,8 @@ const initialState = {
   deletingTalk: false,
   updatingTalk: false,
   addingMeetings: false,
+  addingPrayer: false,
+  updatingPrayer: false,
   message: "",
   meetings: {
     byId: {},
@@ -23,6 +25,7 @@ const initialState = {
   },
   currentMeetingId: 0,
   currentTalkId: 0,
+  currentPrayerId: 0,
 };
 
 const formatByIds = (items) => {
@@ -127,6 +130,33 @@ export const addMeetingsByYear = createAsyncThunk(
     }
   }
 );
+
+export const addPrayer = createAsyncThunk("meetings/addPrayer", async (prayer, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState().auth.user.token;
+    return await meetingsService.addPrayer(prayer, token);
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
+export const updatePrayer = createAsyncThunk("meetings/updatePrayer", async (prayer, thunkAPI) => {
+  const id = prayer.id;
+  try {
+    const token = thunkAPI.getState().auth.user.token;
+    return await meetingsService.updatePrayer(id, prayer, token);
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    return thunkAPI.rejectWithValue(message);
+  }
+});
 
 export const meetingsSlice = createSlice({
   name: "meetings",
@@ -244,6 +274,36 @@ export const meetingsSlice = createSlice({
         );
       })
       .addCase(deleteTalk.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(addPrayer.pending, (state, action) => {
+        // state.currentPrayerId = action.meta.arg.sacramentMeeting;
+        state.addingPrayer = true;
+      })
+      .addCase(addPrayer.fulfilled, (state, action) => {
+        const meetingId = action.payload.sacramentMeeting;
+        state.addingPrayer = false;
+        state.isSuccess = true;
+        state.currentPrayerId = 0;
+        state.meetings.byId[meetingId].prayers.push(action.payload);
+      })
+      .addCase(addPrayer.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(updatePrayer.pending, (state, action) => {
+        state.currentPrayerId = action.meta.arg.id;
+        state.updatingPrayer = true;
+      })
+      .addCase(updatePrayer.fulfilled, (state, action) => {
+        state.updatingPrayer = false;
+        state.isSuccess = true;
+        state.currentPrayerId = 0;
+      })
+      .addCase(updatePrayer.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

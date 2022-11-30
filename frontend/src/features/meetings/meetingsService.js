@@ -3,6 +3,7 @@ import axios from "axios";
 
 const MEETINGS_API_URL = "/api/sacramentmeetings/";
 const TALKS_API_URL = "/api/talks/";
+const PRAYERS_API_URL = "/api/prayers/";
 
 //Get Meeting
 const getMeeting = async (id, token) => {
@@ -96,6 +97,32 @@ const addMeetingsByYear = async (year, token) => {
   return response.data;
 };
 
+//Update Prayer
+const updatePrayer = async (id, prayer, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await axios.put(PRAYERS_API_URL + id, prayer, config);
+
+  return response.data;
+};
+
+//Add Prayer
+const addPrayer = async (prayer, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await axios.post(PRAYERS_API_URL, prayer, config);
+
+  return response.data;
+};
+
 const meetingsService = {
   getMeetings,
   getMeeting,
@@ -104,6 +131,8 @@ const meetingsService = {
   deleteTalk,
   updateTalk,
   addMeetingsByYear,
+  updatePrayer,
+  addPrayer,
 };
 
 export default meetingsService;

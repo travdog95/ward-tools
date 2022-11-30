@@ -3,6 +3,7 @@ const { isBefore, nextSunday, addWeeks, format } = require("date-fns");
 
 const SacramentMeeting = require("../models/sacramentMeetingModel");
 const Talk = require("../models/talkModel");
+const Prayer = require("../models/prayerModel");
 
 const getSundays = (year) => {
   const sundays = [];
@@ -36,7 +37,8 @@ const getSacramentMeetingsByYear = asyncHandler(async (req, res) => {
   await Promise.all(
     sacramentMeetings.map(async (meeting) => {
       const talks = await Talk.find({ sacramentMeeting: meeting.id });
-      const newMeeting = { ...meeting._doc, ...{ talks } };
+      const prayers = await Prayer.find({ sacramentMeeting: meeting.id });
+      const newMeeting = { ...meeting._doc, ...{ talks, prayers } };
       sacramentMeetingsExtended.push(newMeeting);
     })
   );

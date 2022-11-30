@@ -22,3 +22,31 @@ export const formatPhone = (phoneNumber) => {
   //Strip spaces, periods, parentheses and dashes
   return `(${areaCode}) ${firstThreeNumbers}-${lastFourNumbers}`;
 };
+
+export const getMeetingPrayers = (members, meeting) => {
+  //Find prayers
+  const meetingInvocation = meeting.prayers.filter((prayer) => prayer.prayerType === "Invocation");
+  const meetingBenediction = meeting.prayers.filter(
+    (prayer) => prayer.prayerType === "Benediction"
+  );
+
+  let invocation = null;
+  let memberInvocationArray = [];
+  if (meetingInvocation.length > 0) {
+    memberInvocationArray = members.filter((m) => m._id === meetingInvocation[0].member);
+    invocation = meetingInvocation[0];
+  }
+
+  const memberInvocation = memberInvocationArray[0] ? memberInvocationArray[0] : null;
+
+  let benediction = null;
+  let memberBenedictionArray = [];
+  if (meetingBenediction.length > 0) {
+    memberBenedictionArray = members.filter((m) => m._id === meetingBenediction[0].member);
+    benediction = meetingBenediction[0];
+  }
+
+  const memberBenediction = memberBenedictionArray[0] ? memberBenedictionArray[0] : null;
+
+  return { invocation, memberInvocation, benediction, memberBenediction };
+};

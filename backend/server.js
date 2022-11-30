@@ -23,6 +23,7 @@ app.use("/api/members", require("./routes/memberRoutes"));
 app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/files", require("./routes/fileRoutes"));
 app.use("/api/talks", require("./routes/talkRoutes"));
+app.use("/api/prayers", require("./routes/prayerRoutes"));
 app.use("/api/sacramentmeetings", require("./routes/sacramentMeetingRoutes"));
 
 // Serve frontend
