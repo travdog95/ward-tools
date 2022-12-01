@@ -4,6 +4,7 @@ import fileReducer from "../features/fileManagement/fileSlice";
 import memberReducer from "../features/member/memberSlice";
 import membersReducer from "../features/members/membersSlice";
 import meetingsReducer from "../features/meetings/meetingsSlice";
+import talksReducer from "../features/talks/talksSlice";
 
 export const store = configureStore({
   reducer: {
@@ -12,5 +13,6 @@ export const store = configureStore({
     member: memberReducer,
     members: membersReducer,
     meetings: meetingsReducer,
+    talks: talksReducer,
   },
 });

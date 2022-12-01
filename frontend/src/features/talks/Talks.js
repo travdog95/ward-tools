@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { formatDate } from "../../../utils/helpers";
-import { getTalksByMember } from "../../talks/talksSlice";
+import { formatDate } from "../../utils/helpers";
+import { getTalksByMember } from "./talksSlice";
 
 const Talks = ({ memberId }) => {
   const dispatch = useDispatch();
@@ -22,17 +22,24 @@ const Talks = ({ memberId }) => {
     return <div>Error loading talks!</div>;
   }
 
+  const numTalks = talks.length;
+  let lastTalk = null;
+  let lastTalkTopic = "";
+  if (numTalks > 0) {
+    lastTalk = talks[numTalks - 1];
+    lastTalkTopic = lastTalk.topic === "" ? "no topic" : lastTalk.topic;
+  }
+
   return (
-    <div>
-      {talks.map((talk, index) => {
-        const topicText = talk.topic === "" ? "no topic" : talk.topic;
-        return (
-          <div key={index}>
-            {formatDate(talk.sacramentMeeting.date, "d-MMM-yyyy")} - {topicText}
-          </div>
-        );
-      })}
-    </div>
+    <>
+      {numTalks > 0 ? (
+        <div>
+          ({numTalks}) {lastTalkTopic}- {formatDate(lastTalk.sacramentMeeting.date, "d-MMM-yyyy")}
+        </div>
+      ) : (
+        <div>Never!</div>
+      )}
+    </>
   );
 };
 

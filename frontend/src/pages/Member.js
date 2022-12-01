@@ -47,6 +47,7 @@ const Member = () => {
 
   return (
     <>
+      <h1>Member Profile</h1>
       <MemberAutoComplete
         members={members}
         label="Search"
@@ -54,7 +55,6 @@ const Member = () => {
         member={searchValue}
         className=""
       />
-      <h1>Member Profile</h1>
       {id ? (
         <section className="profile-container">
           <div className="profile-header">
@@ -64,7 +64,7 @@ const Member = () => {
           </div>
           <div className="profile-inner-container">
             <ProfileForm member={member} />
-            <ProfileDetail id={id} />
+            <ProfileDetail memberId={id} />
           </div>
         </section>
       ) : null}
