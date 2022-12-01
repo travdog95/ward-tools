@@ -5,6 +5,7 @@ import memberReducer from "../features/member/memberSlice";
 import membersReducer from "../features/members/membersSlice";
 import meetingsReducer from "../features/meetings/meetingsSlice";
 import talksReducer from "../features/talks/talksSlice";
+import prayersReducer from "../features/prayers/prayersSlice";
 
 export const store = configureStore({
   reducer: {
@@ -14,5 +15,6 @@ export const store = configureStore({
     members: membersReducer,
     meetings: meetingsReducer,
     talks: talksReducer,
+    prayers: prayersReducer,
   },
 });

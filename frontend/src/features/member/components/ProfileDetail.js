@@ -5,6 +5,7 @@ import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 
 import Talks from "../../talks/Talks";
+import Prayers from "../../prayers/Prayers";
 
 const ProfileDetail = (props) => {
   const { memberId } = props;
@@ -24,7 +25,9 @@ const ProfileDetail = (props) => {
       </div>
       <div className="info-row">
         <div className="label">Prayers</div>
-        <div className="info"></div>
+        <div className="profile-details">
+          <Prayers memberId={memberId} />
+        </div>
       </div>
       <div className="info-row">
         <div className="label">Tithing Declarations</div>

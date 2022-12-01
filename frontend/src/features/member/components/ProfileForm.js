@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { ToggleButtonGroup, ToggleButton } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
 
+import ToggleButtons from "../../../components/ToggleButtons";
 import { updateMember } from "../memberSlice";
 import { calculateAge, formatDate, formatPhone } from "../../../utils/helpers";
 
@@ -14,10 +14,14 @@ const ProfileForm = (props) => {
   const [memberWillingToPray, setMemberWillingToPray] = useState(member.isWillingToPray);
   const [memberWillingToSpeak, setMemberWillingToSpeak] = useState(member.isWillingToSpeak);
   const [memberContactForTithing, setMemberContactForTithing] = useState(member.contactForTithing);
+  const [idBeingUpdated, setIdBeingUpdated] = useState("");
+
+  const { updatingMember } = useSelector((state) => state.member);
 
   const handleWillingToPrayChange = (event, newValue) => {
     if (newValue !== null) {
       setMemberWillingToPray(newValue);
+      setIdBeingUpdated("pray");
       dispatch(updateMember({ id: member._id, isWillingToPray: newValue }));
     }
   };
@@ -25,6 +29,7 @@ const ProfileForm = (props) => {
   const handleWillingToSpeakChange = (event, newValue) => {
     if (newValue !== null) {
       setMemberWillingToSpeak(newValue);
+      setIdBeingUpdated("speak");
       dispatch(updateMember({ id: member._id, isWillingToSpeak: newValue }));
     }
   };
@@ -32,6 +37,7 @@ const ProfileForm = (props) => {
   const handleContactForTithingChange = (event, newValue) => {
     if (newValue !== null) {
       setMemberContactForTithing(newValue);
+      setIdBeingUpdated("tithing");
       dispatch(updateMember({ id: member._id, contactForTithing: newValue }));
     }
   };
@@ -68,46 +74,40 @@ const ProfileForm = (props) => {
       <div className="form-row">
         <div className="label">Willing to Pray?</div>
         <div className="value">
-          <ToggleButtonGroup
-            size="small"
+          <ToggleButtons
             value={memberWillingToPray}
-            exclusive
             onChange={handleWillingToPrayChange}
-            aria-label="Willing to Pray"
-          >
-            <ToggleButton value={true}>Yes</ToggleButton>
-            <ToggleButton value={false}>No</ToggleButton>
-          </ToggleButtonGroup>
+            label="Willing to Pray"
+            updating={updatingMember}
+            id="pray"
+            idBeingUpdated={idBeingUpdated}
+          />
         </div>
       </div>
       <div className="form-row">
         <div className="label">Willing to Speak?</div>
         <div className="value">
-          <ToggleButtonGroup
-            size="small"
+          <ToggleButtons
             value={memberWillingToSpeak}
-            exclusive
             onChange={handleWillingToSpeakChange}
-            aria-label="Willing to Speak"
-          >
-            <ToggleButton value={true}>Yes</ToggleButton>
-            <ToggleButton value={false}>No</ToggleButton>
-          </ToggleButtonGroup>
+            label="Willing to Speak"
+            updating={updatingMember}
+            id="speak"
+            idBeingUpdated={idBeingUpdated}
+          />
         </div>
       </div>
       <div className="form-row">
         <div className="label">Contact for Tithing?</div>
         <div className="value">
-          <ToggleButtonGroup
-            size="small"
+          <ToggleButtons
             value={memberContactForTithing}
-            exclusive
             onChange={handleContactForTithingChange}
-            aria-label="Contact for Tithing"
-          >
-            <ToggleButton value={true}>Yes</ToggleButton>
-            <ToggleButton value={false}>No</ToggleButton>
-          </ToggleButtonGroup>
+            label="Contact for Tithing to Speak"
+            updating={updatingMember}
+            id="tithing"
+            idBeingUpdated={idBeingUpdated}
+          />
         </div>
       </div>
     </div>

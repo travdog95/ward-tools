@@ -34,10 +34,10 @@ const Talks = ({ memberId }) => {
     <>
       {numTalks > 0 ? (
         <div>
-          ({numTalks}) {lastTalkTopic}- {formatDate(lastTalk.sacramentMeeting.date, "d-MMM-yyyy")}
+          ({numTalks}) {formatDate(lastTalk.sacramentMeeting.date, "d-MMM-yyyy")} - {lastTalkTopic}
         </div>
       ) : (
-        <div>Never!</div>
+        <div>None!</div>
       )}
     </>
   );

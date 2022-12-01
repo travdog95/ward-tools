@@ -8,11 +8,13 @@ const {
   deleteMember,
   getMember,
   getTalksByMember,
+  getPrayersByMember,
 } = require("../controllers/memberController");
 const { protect } = require("../middleware/authMiddleware");
 
 router.route("/").get(protect, getMembers).post(protect, addMember);
 router.route("/:id/talks").get(protect, getTalksByMember);
+router.route("/:id/prayers").get(protect, getPrayersByMember);
 
 router
   .route("/:id")

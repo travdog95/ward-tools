@@ -5,6 +5,7 @@ const initialState = {
   isError: false,
   isSuccess: false,
   isLoading: false,
+  updatingMember: false,
   message: "",
   member: {},
 };
@@ -51,7 +52,7 @@ export const memberSlice = createSlice({
       })
       .addCase(getMember.fulfilled, (state, action) => {
         state.isLoading = false;
-        // state.isSuccess = true;
+        state.isSuccess = true;
         state.member = action.payload;
       })
       .addCase(getMember.rejected, (state, action) => {
@@ -60,15 +61,15 @@ export const memberSlice = createSlice({
         state.message = action.payload;
       })
       .addCase(updateMember.pending, (state) => {
-        state.isLoading = true;
+        state.updatingMember = true;
       })
       .addCase(updateMember.fulfilled, (state, action) => {
-        state.isLoading = false;
-        // state.isSuccess = true;
+        state.updatingMember = false;
+        state.isSuccess = true;
         state.member = action.payload;
       })
       .addCase(updateMember.rejected, (state, action) => {
-        state.isLoading = false;
+        state.updatingMember = false;
         state.isError = true;
         state.message = action.payload;
       });
