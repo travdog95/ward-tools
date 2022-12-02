@@ -10,6 +10,8 @@ import MemberAutoComplete from "../components/MemberAutoComplete";
 import Spinner from "../components/Spinner";
 import { getMember } from "../features/member/memberSlice";
 
+import "../features/member/components/member.css";
+
 const Member = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();

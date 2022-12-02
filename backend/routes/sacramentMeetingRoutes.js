@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const {
   getSacramentMeeting,
+  getSacramentMeetings,
   addSacramentMeeting,
   updateSacramentMeeting,
   patchSacramentMeeting,
@@ -12,10 +13,8 @@ const {
 } = require("../controllers/sacramentMeetingController");
 const { protect } = require("../middleware/authMiddleware");
 
-router
-  .route("/")
-  // .get(protect, getSacramentMeetings)
-  .post(protect, addSacramentMeeting);
+router.route("/").get(protect, getSacramentMeetings).post(protect, addSacramentMeeting);
+
 router
   .route("/year/:year")
   .get(protect, getSacramentMeetingsByYear)

@@ -11,6 +11,7 @@ import Register from "./pages/Register";
 import DataFiles from "./pages/DataFiles";
 import WardList from "./pages/WardList";
 import Member from "./pages/Member";
+import Import from "./pages/Import";
 import SacramentMeetings from "./pages/SacramentMeetings";
 import { getMembers } from "./features/members/membersSlice";
 import Spinner from "./components/Spinner";
@@ -49,6 +50,7 @@ const App = () => {
             <Route path="/wardlist" element={<WardList />} />
             <Route path="/member/:id" element={<Member />} />
             <Route path="/member" element={<Member />} />
+            <Route path="/import" element={<Import />} />
             <Route path="/sacramentmeetings" element={<SacramentMeetings />} />
           </Routes>
         </div>

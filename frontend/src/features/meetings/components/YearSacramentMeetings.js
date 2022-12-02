@@ -12,11 +12,13 @@ const YearSacramentMeetings = ({ year }) => {
   );
 
   useEffect(() => {
-    dispatch(getMeetingsByYear(year));
-  }, [dispatch, year]);
+    if (!meetings.idsByYear[year]) {
+      dispatch(getMeetingsByYear({ year, ext: true }));
+    }
+  }, [dispatch, year, meetings.idsByYear]);
 
   const addMeetings = () => {
-    dispatch(addMeetingsByYear(year)).then(() => dispatch(getMeetingsByYear(year)));
+    dispatch(addMeetingsByYear(year)).then(() => dispatch(getMeetingsByYear({ year, ext: true })));
   };
 
   if (addingMeetings) {
@@ -35,11 +37,12 @@ const YearSacramentMeetings = ({ year }) => {
   return (
     <>
       <div className="sacrament-meetings-container">
-        {meetings.allIds.map((meetingId, index) => {
-          return <SacramentMeetingRow key={index} meeting={meetings.byId[meetingId]} />;
-        })}
+        {meetings.idsByYear[year] &&
+          meetings.idsByYear[year].map((meetingId, index) => {
+            return <SacramentMeetingRow key={index} meeting={meetings.byId[meetingId]} />;
+          })}
 
-        {meetings.allIds.length === 0 ? (
+        {meetings.idsByYear[year] && meetings.idsByYear[year].length === 0 ? (
           <>
             <button className="btn" onClick={addMeetings}>
               Add Meetings

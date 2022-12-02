@@ -1,35 +1,35 @@
-import { useState } from "react";
-import TextField from "@mui/material/TextField";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+// import { useState } from "react";
+// import TextField from "@mui/material/TextField";
+// import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+// import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+// import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 
-import Talks from "../../talks/Talks";
-import Prayers from "../../prayers/Prayers";
+import MemberProfileTalk from "../../talks/MemberProfileTalk";
+import MemberProfilePrayer from "../../prayers/MemberProfilePrayer";
 
 const ProfileDetail = (props) => {
   const { memberId } = props;
-  const [value, setValue] = useState(new Date());
+  // const [value, setValue] = useState(new Date());
 
-  const handleChange = (newValue) => {
-    setValue(newValue);
-  };
+  // const handleChange = (newValue) => {
+  //   setValue(newValue);
+  // };
 
   return (
     <div className="profile-info">
       <div className="info-row">
         <div className="label">Talks</div>
         <div className="profile-details">
-          <Talks memberId={memberId} />
+          <MemberProfileTalk memberId={memberId} />
         </div>
       </div>
       <div className="info-row">
         <div className="label">Prayers</div>
         <div className="profile-details">
-          <Prayers memberId={memberId} />
+          <MemberProfilePrayer memberId={memberId} />
         </div>
       </div>
-      <div className="info-row">
+      {/* <div className="info-row">
         <div className="label">Tithing Declarations</div>
         <div className="info">
           <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -43,7 +43,7 @@ const ProfileDetail = (props) => {
             />
           </LocalizationProvider>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

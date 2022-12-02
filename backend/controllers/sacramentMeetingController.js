@@ -57,6 +57,39 @@ const getSacramentMeetingsByYear = asyncHandler(async (req, res) => {
   res.status(200).json(sacramentMeetingsExtended);
 });
 
+// @desc    Get sacramentMeetings
+// @router  GET /api/sacramentmeetings/
+// @access  Private
+const getSacramentMeetings = asyncHandler(async (req, res) => {
+  let sacramentMeetings = [];
+
+  sacramentMeetings = await SacramentMeeting.find().sort({ date: -1 });
+
+  //Load prayers and talks if ext query param is passed in
+  if (req.query.ext) {
+    let sacramentMeetingsExtended = [];
+    await Promise.all(
+      sacramentMeetings.map(async (meeting) => {
+        const talks = await Talk.find({ sacramentMeeting: meeting.id });
+        const prayers = await Prayer.find({ sacramentMeeting: meeting.id });
+        const newMeeting = { ...meeting._doc, ...{ talks, prayers } };
+        sacramentMeetingsExtended.push(newMeeting);
+      })
+    );
+
+    //resort sacrament meetings by date (descending), it gets jumbled up because of the async calls above
+    sacramentMeetingsExtended.sort((a, b) => {
+      let da = new Date(a.date);
+      let db = new Date(b.date);
+      return db - da;
+    });
+
+    sacramentMeetings = sacramentMeetingsExtended;
+  }
+
+  res.status(200).json(sacramentMeetings);
+});
+
 // @desc    Get sacramentMeeting
 // @router  GET /api/sacramentmeetings/:id
 // @access  Private
@@ -186,6 +219,7 @@ const deleteSacramentMeetingsByYear = asyncHandler(async (req, res) => {
 });
 
 module.exports = {
+  getSacramentMeetings,
   getSacramentMeetingsByYear,
   addSacramentMeeting,
   updateSacramentMeeting,

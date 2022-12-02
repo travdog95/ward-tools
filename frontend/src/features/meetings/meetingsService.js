@@ -71,14 +71,22 @@ const updateTalk = async (id, talk, token) => {
   return response.data;
 };
 
-//Get Meetings by Year
-const getMeetings = async (year, token) => {
+//Get Meetings
+const getMeetings = async (params, token) => {
+  const { year, ext } = params;
+
+  let url = "";
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   };
-  const response = await axios.get(MEETINGS_API_URL + "year/" + year, config);
+
+  url = year ? MEETINGS_API_URL + "year/" + year : MEETINGS_API_URL;
+
+  url = ext ? url + "?ext=true" : url;
+
+  const response = await axios.get(url, config);
 
   return response.data;
 };

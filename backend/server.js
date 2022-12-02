@@ -25,6 +25,7 @@ app.use("/api/files", require("./routes/fileRoutes"));
 app.use("/api/talks", require("./routes/talkRoutes"));
 app.use("/api/prayers", require("./routes/prayerRoutes"));
 app.use("/api/sacramentmeetings", require("./routes/sacramentMeetingRoutes"));
+app.use("/api/importData", require("./routes/importDataRoutes"));
 
 // Serve frontend
 if (process.env.NODE_ENV === "production") {

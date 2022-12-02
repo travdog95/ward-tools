@@ -4,6 +4,7 @@ const talkSchema = mongoose.Schema(
   {
     topic: {
       type: String,
+      default: "",
     },
     talkType: {
       type: String,

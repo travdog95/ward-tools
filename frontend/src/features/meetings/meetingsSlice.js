@@ -17,6 +17,7 @@ const initialState = {
     byId: {},
     allIds: [],
     filteredIds: [],
+    idsByYear: {},
   },
   filters: {
     year: new Date().getFullYear(),
@@ -51,10 +52,23 @@ export const getMeeting = createAsyncThunk("meetings/get", async (meetingId, thu
   }
 });
 
-export const getMeetingsByYear = createAsyncThunk("meetings/byYear", async (year, thunkAPI) => {
+export const getMeetings = createAsyncThunk("meetings/getAll", async (params, thunkAPI) => {
   try {
     const token = thunkAPI.getState().auth.user.token;
-    return await meetingsService.getMeetings(year, token);
+    return await meetingsService.getMeetings(params, token);
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
+export const getMeetingsByYear = createAsyncThunk("meetings/byYear", async (params, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState().auth.user.token;
+    return await meetingsService.getMeetings(params, token);
   } catch (error) {
     const message =
       (error.response && error.response.data && error.response.data.message) ||
@@ -185,17 +199,34 @@ export const meetingsSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(getMeetingsByYear.fulfilled, (state, action) => {
-        const tabYear = parseInt(action.meta.arg);
+        const year = parseInt(action.meta.arg.year);
+        const meetings = action.payload;
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.meetings.idsByYear[year] = meetings.map((meeting) => {
+          return meeting._id;
+        });
+        state.meetings.byId = { ...state.meetings.byId, ...formatByIds(meetings) };
+        state.filters.year = year;
+      })
+      .addCase(getMeetingsByYear.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(getMeetings.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getMeetings.fulfilled, (state, action) => {
         const meetings = action.payload;
         state.isLoading = false;
         state.isSuccess = true;
         state.meetings.allIds = meetings.map((meeting) => {
           return meeting._id;
         });
-        state.meetings.byId = formatByIds(meetings);
-        state.filters.year = tabYear;
+        state.meetings.byId = { ...state.meetings.byId, ...formatByIds(meetings) };
       })
-      .addCase(getMeetingsByYear.rejected, (state, action) => {
+      .addCase(getMeetings.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

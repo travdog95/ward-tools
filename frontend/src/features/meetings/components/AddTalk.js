@@ -18,7 +18,7 @@ const AddTalk = ({ meeting }) => {
   const { members } = useSelector((state) => state.members);
 
   const handleAddTalk = () => {
-    if (member && topic) {
+    if (member) {
       const talk = { topic, talkType: "Adult", member: member._id, sacramentMeeting: meeting._id };
       dispatch(addTalk(talk));
       setTopic("");
