@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
-
+const { isAfter, parseISO } = require("date-fns");
 const Talk = require("../models/talkModel");
+const Member = require("../models/memberModel");
 
 // @desc    Get talks
 // @router  GET /api/talks
@@ -39,10 +40,23 @@ const addTalk = asyncHandler(async (req, res) => {
     throw new Error("Please add sacrament meeting");
   }
 
+  const memberId = req.body.member;
+  const meetingId = req.body.sacramentMeeting;
+
+  //Get member
+  const member = await Member.findById(memberId).populate("talksTest");
+  //Get last talk date
+  const lastTalkDate = getLastTalkDate(member.talksTest, req.body.date);
+
+  //Update member
+  const updateMember = await Member.findByIdAndUpdate(memberId, { lastTalkDate });
+
   const talk = await Talk.create({
     topic: req.body.topic,
-    member: req.body.member,
-    sacramentMeeting: req.body.sacramentMeeting,
+    member: memberId,
+    sacramentMeeting: meetingId,
+    date: req.body.date,
+    talkType: req.body.talkType,
   });
 
   res.status(200).json(talk);
@@ -90,11 +104,30 @@ const deleteTalk = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Talk not found");
   }
-
   await talk.remove();
 
   res.status(200).json(talk);
 });
+
+const getLastTalkDate = (talks, newTalkDate) => {
+  if (talks.length === 0 || !talks[0].date) {
+    return newTalkDate;
+  }
+
+  talks.sort((a, b) => {
+    let da = new Date(a.date);
+    let db = new Date(b.date);
+    return db - da;
+  });
+
+  //If there is a latest talk date
+  const latestDate = talks[0].date;
+
+  console.log("latestDate", latestDate);
+  console.log("newTalkDate", newTalkDate);
+
+  return isAfter(parseISO(newTalkDate), latestDate) ? newTalkDate : latestDate;
+};
 
 module.exports = {
   getTalks,

@@ -1,7 +1,7 @@
 const multer = require("multer");
-const constants = require("../config/constants");
+const { UPLOAD_DIR } = require("../config/constants");
 
-const upload = multer({ dest: constants.UPLOAD_DIR });
+const upload = multer({ dest: UPLOAD_DIR });
 
 // const addZero = (i) => {
 //   if (i < 10) {
@@ -12,7 +12,7 @@ const upload = multer({ dest: constants.UPLOAD_DIR });
 
 // const upload = multer({
 //   storage: multer.diskStorage({
-//     destination: constants.UPLOAD_DIR,
+//     destination: UPLOAD_DIR,
 //     filename: function (req, file, cb) {
 //       let originalFileName = file.originalname;
 //       let originalFileFrgs = originalFileName.split(".");

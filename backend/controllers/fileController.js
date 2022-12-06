@@ -1,7 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const fs = require("fs");
 const url = require("url");
-const constants = require("../config/constants");
+const { UPLOAD_DIR } = require("../config/constants");
 const Member = require("../models/memberModel");
 
 const getMemberId = (url) => {
@@ -36,7 +36,7 @@ const getFiles = asyncHandler(async (req, res) => {
   let files = [];
 
   //Read files in uploads directory
-  fs.readdir("./" + constants.UPLOAD_DIR, (err, uploadedFiles) => {
+  fs.readdir("./" + UPLOAD_DIR, (err, uploadedFiles) => {
     //handling error
     if (err) {
       res.status(400);
@@ -58,7 +58,7 @@ const getFiles = asyncHandler(async (req, res) => {
 const getFile = asyncHandler(async (req, res) => {
   const filename = req.params.id;
 
-  const data = await readFile("./" + constants.UPLOAD_DIR + "/" + filename);
+  const data = await readFile("./" + UPLOAD_DIR + "/" + filename);
 
   const file = {
     filename,
@@ -88,7 +88,7 @@ const deleteFile = asyncHandler(async (req, res) => {
     throw new Error("File not found");
   }
 
-  fs.unlink("./" + constants.UPLOAD_DIR + "/" + file, (err) => {
+  fs.unlink("./" + UPLOAD_DIR + "/" + file, (err) => {
     if (err) {
       res.status(400);
       throw new Error(err);
@@ -109,7 +109,7 @@ const importData = asyncHandler(async (req, res) => {
     throw new Error("Please include filename");
   }
 
-  const data = await readFile("./" + constants.UPLOAD_DIR + "/" + filename);
+  const data = await readFile("./" + UPLOAD_DIR + "/" + filename);
   const fileData = JSON.parse(data);
   let members = [];
   let errors = [];

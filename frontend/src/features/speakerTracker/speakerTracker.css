@@ -1,0 +1,12 @@
+.speaker-tracker-filters {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.filter-label {
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+}

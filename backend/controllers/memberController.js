@@ -46,14 +46,14 @@ const getPrayersByMember = asyncHandler(async (req, res) => {
 // @router  POST /api/members
 // @access  Private
 const addMember = asyncHandler(async (req, res) => {
-  if (!req.body.text) {
+  if (!req.body.firstName) {
     res.status(400);
-    throw new Error("Please add a name field");
+    throw new Error("Please add a first name field");
   }
 
-  const member = await Member.create({
-    text: req.body.text,
-  });
+  const newMember = { ...req.body };
+
+  const member = await Member.create(newMember);
 
   res.status(200).json(member);
 });

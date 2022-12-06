@@ -19,7 +19,14 @@ const AddTalk = ({ meeting }) => {
 
   const handleAddTalk = () => {
     if (member) {
-      const talk = { topic, talkType: "Adult", member: member._id, sacramentMeeting: meeting._id };
+      //TODO: determine talk type
+      const talk = {
+        topic,
+        talkType: "Adult",
+        member: member._id,
+        sacramentMeeting: meeting._id,
+        date: meeting.date,
+      };
       dispatch(addTalk(talk));
       setTopic("");
       setMember(null);

@@ -1,5 +1,4 @@
-const constants = {
+module.exports = {
   UPLOAD_DIR: "backend/uploads",
+  SCHEMA_VERSION: 0.5,
 };
-
-module.exports = constants;
