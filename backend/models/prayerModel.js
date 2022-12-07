@@ -35,6 +35,7 @@ prayerSchema.pre("remove", async function (next) {
   //Remove talk from member document
   const updateMember = await Member.findByIdAndUpdate(this.member, {
     $pull: { prayersTest: this._id },
+    $inc: { prayerCount: -1 },
   });
 
   //Remove talk from member document
