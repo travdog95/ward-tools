@@ -43,7 +43,12 @@ const SacramentMeetingRow = ({ meeting }) => {
       dispatch(updatePrayer({ id: invocation._id, member: value._id }));
     } else {
       dispatch(
-        addPrayer({ member: value._id, sacramentMeeting: meeting._id, prayerType: "Invocation" })
+        addPrayer({
+          member: value._id,
+          sacramentMeeting: meeting._id,
+          prayerType: "Invocation",
+          date: meeting.date,
+        })
       );
     }
     setInvocation(value);
@@ -54,7 +59,12 @@ const SacramentMeetingRow = ({ meeting }) => {
       dispatch(updatePrayer({ id: benediction._id, member: value._id }));
     } else {
       dispatch(
-        addPrayer({ member: value._id, sacramentMeeting: meeting._id, prayerType: "Benediction" })
+        addPrayer({
+          member: value._id,
+          sacramentMeeting: meeting._id,
+          prayerType: "Benediction",
+          date: meeting.date,
+        })
       );
     }
 

@@ -46,7 +46,7 @@ const AddTalk = ({ meeting }) => {
     return "Error";
   }
 
-  const loading = addingTalk && currentMeetingId === meeting._id;
+  const loading = addingTalk && currentMeetingId === meeting._id && !isError;
   return (
     <>
       <div className="add-talk-container">

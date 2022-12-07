@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { getYear, getMonth } = require("date-fns");
 const { SCHEMA_VERSION } = require("../config/constants");
 
 const sacramentMeetingSchema = mongoose.Schema(
@@ -10,12 +11,30 @@ const sacramentMeetingSchema = mongoose.Schema(
     date: {
       type: Date,
       required: true,
-      default: new Date(),
+      default: null,
     },
     talksTest: [{ type: mongoose.Schema.Types.ObjectId, ref: "Talk" }],
     prayersTest: [{ type: mongoose.Schema.Types.ObjectId, ref: "Prayer" }],
-    year: { type: Number },
-    month: { type: Number },
+    year: {
+      type: Number,
+      default: function () {
+        if (this.date) {
+          return getYear(this.date);
+        } else {
+          return null;
+        }
+      },
+    },
+    month: {
+      type: Number,
+      default: function () {
+        if (this.date) {
+          return getMonth(this.date);
+        } else {
+          return null;
+        }
+      },
+    },
   },
   {
     timestamps: true,

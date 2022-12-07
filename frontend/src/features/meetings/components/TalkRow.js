@@ -13,7 +13,9 @@ const TalkRow = ({ talk, member }) => {
   const [topic, setTopic] = useState(talk.topic);
   const [oldTopic, setOldTopic] = useState(talk.topic);
 
-  const { deletingTalk, currentTalkId, updatingTalk } = useSelector((state) => state.meetings);
+  const { deletingTalk, currentTalkId, updatingTalk, isError } = useSelector(
+    (state) => state.meetings
+  );
 
   const handleOnTopicChange = (e) => {
     setTopic(e.target.value);
@@ -23,7 +25,6 @@ const TalkRow = ({ talk, member }) => {
     const newTopic = e.target.value;
     if (oldTopic !== newTopic) {
       setOldTopic(newTopic);
-      console.log(talk._id);
       dispatch(updateTalk({ id: talk._id, topic: newTopic }));
     }
   };
@@ -32,7 +33,7 @@ const TalkRow = ({ talk, member }) => {
     dispatch(deleteTalk(talk));
   };
 
-  const loading = deletingTalk && currentTalkId === talk._id;
+  const loading = deletingTalk && currentTalkId === talk._id && !isError;
 
   return (
     <div className="sacrament-meeting-talk-row">

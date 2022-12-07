@@ -43,6 +43,7 @@ const addPrayer = asyncHandler(async (req, res) => {
     prayerType: req.body.prayerType,
     member: req.body.member,
     sacramentMeeting: req.body.sacramentMeeting,
+    date: req.body.date,
   });
 
   res.status(200).json(prayer);

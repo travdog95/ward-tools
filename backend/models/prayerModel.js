@@ -22,7 +22,7 @@ const prayerSchema = mongoose.Schema(
       required: true,
       ref: "SacramentMeeting",
     },
-    date: { type: Date, required: true },
+    date: { type: Date, required: true, default: null },
   },
   {
     timestamps: true,
@@ -30,34 +30,80 @@ const prayerSchema = mongoose.Schema(
 );
 
 prayerSchema.pre("remove", async function (next) {
-  //TODO: error handling
+  try {
+    //find current member prayers
+    const member = await Member.findById(this.member).populate("prayersTest");
 
-  //Remove talk from member document
-  const updateMember = await Member.findByIdAndUpdate(this.member, {
-    $pull: { prayersTest: this._id },
-    $inc: { prayerCount: -1 },
-  });
+    //Filter out prayer being removed
+    const memberPrayers = member.prayersTest.filter(
+      (prayer) => prayer._id.toString() !== this._id.toString()
+    );
 
-  //Remove talk from member document
-  const updateMeeting = await Meeting.findByIdAndUpdate(this.sacramentMeeting, {
-    $pull: { prayersTest: this._id },
-  });
+    //Determine new lastPrayerDate
+    const lastPrayerDate = memberPrayers.length === 0 ? null : getLatestDate(memberPrayers);
 
+    //Update member
+    const updateMember = await Member.findByIdAndUpdate(this.member, {
+      $pull: { prayersTest: this._id },
+      $inc: { prayerCount: -1 },
+      lastPrayerDate,
+    });
+
+    //Remove prayer from sacrament meeting document
+    const updateMeeting = await Meeting.findByIdAndUpdate(this.sacramentMeeting, {
+      $pull: { prayersTest: this._id },
+    });
+  } catch (error) {
+    console.error(error);
+    throw new Error("Error on pre.remove middleware for Prayer", error);
+  }
   next();
 });
 
 prayerSchema.post("save", async function (doc) {
-  //TODO: add error handling
+  try {
+    //Add prayer to member, and update prayerCount
+    const member = await Member.findById(doc.member).populate("prayersTest");
 
-  //Add talk to member
-  const member = await Member.findById(doc.member);
-  member.prayersTest.push(doc._id);
-  await member.save();
+    const lastPrayerDate = getLatestDate(member.prayersTest, doc.date);
 
-  //Add talk to meeting
-  const meeting = await Meeting.findById(doc.sacramentMeeting);
-  meeting.prayersTest.push(doc._id);
-  await meeting.save();
+    //Update member
+    const updateMember = await Member.findByIdAndUpdate(doc.member, {
+      $push: { prayersTest: doc._id },
+      $inc: { prayerCount: 1 },
+      lastPrayerDate,
+    });
+
+    //Add prayer to meeting
+    const meeting = await Meeting.findById(doc.sacramentMeeting);
+    meeting.prayersTest.push(doc._id);
+    await meeting.save();
+  } catch (error) {
+    console.error(error);
+    throw new Error("Error on pre.remove middleware for Prayer", error);
+  }
 });
+
+const getLatestDate = (items, newDate = null) => {
+  //If this is the first item, retun newDate
+  if (items.length === 0 || !items[0].date) {
+    return newDate;
+  }
+
+  let itemDates = items;
+  if (newDate) {
+    //add to array to compare to existing item dates
+    itemDates.push({ date: newDate });
+  }
+
+  //Sort items by date descending
+  itemDates.sort((a, b) => {
+    let da = new Date(a.date);
+    let db = new Date(b.date);
+    return db - da;
+  });
+
+  return itemDates[0].date;
+};
 
 module.exports = mongoose.model("Prayer", prayerSchema);
