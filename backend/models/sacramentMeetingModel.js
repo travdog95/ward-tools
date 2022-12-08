@@ -13,8 +13,8 @@ const sacramentMeetingSchema = mongoose.Schema(
       required: true,
       default: null,
     },
-    talksTest: [{ type: mongoose.Schema.Types.ObjectId, ref: "Talk" }],
-    prayersTest: [{ type: mongoose.Schema.Types.ObjectId, ref: "Prayer" }],
+    talks: [{ type: mongoose.Schema.Types.ObjectId, ref: "Talk" }],
+    prayers: [{ type: mongoose.Schema.Types.ObjectId, ref: "Prayer" }],
     year: {
       type: Number,
       default: function () {

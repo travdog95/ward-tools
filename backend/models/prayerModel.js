@@ -32,10 +32,10 @@ const prayerSchema = mongoose.Schema(
 prayerSchema.pre("remove", async function (next) {
   try {
     //find current member prayers
-    const member = await Member.findById(this.member).populate("prayersTest");
+    const member = await Member.findById(this.member).populate("prayers");
 
     //Filter out prayer being removed
-    const memberPrayers = member.prayersTest.filter(
+    const memberPrayers = member.prayers.filter(
       (prayer) => prayer._id.toString() !== this._id.toString()
     );
 
@@ -44,14 +44,14 @@ prayerSchema.pre("remove", async function (next) {
 
     //Update member
     const updateMember = await Member.findByIdAndUpdate(this.member, {
-      $pull: { prayersTest: this._id },
+      $pull: { prayers: this._id },
       $inc: { prayerCount: -1 },
       lastPrayerDate,
     });
 
     //Remove prayer from sacrament meeting document
     const updateMeeting = await Meeting.findByIdAndUpdate(this.sacramentMeeting, {
-      $pull: { prayersTest: this._id },
+      $pull: { prayers: this._id },
     });
   } catch (error) {
     console.error(error);
@@ -63,20 +63,20 @@ prayerSchema.pre("remove", async function (next) {
 prayerSchema.post("save", async function (doc) {
   try {
     //Add prayer to member, and update prayerCount
-    const member = await Member.findById(doc.member).populate("prayersTest");
+    const member = await Member.findById(doc.member).populate("prayers");
 
-    const lastPrayerDate = getLatestDate(member.prayersTest, doc.date);
+    const lastPrayerDate = getLatestDate(member.prayers, doc.date);
 
     //Update member
     const updateMember = await Member.findByIdAndUpdate(doc.member, {
-      $push: { prayersTest: doc._id },
+      $push: { prayers: doc._id },
       $inc: { prayerCount: 1 },
       lastPrayerDate,
     });
 
     //Add prayer to meeting
     const meeting = await Meeting.findById(doc.sacramentMeeting);
-    meeting.prayersTest.push(doc._id);
+    meeting.prayers.push(doc._id);
     await meeting.save();
   } catch (error) {
     console.error(error);

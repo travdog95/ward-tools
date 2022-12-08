@@ -41,26 +41,24 @@ const talkSchema = mongoose.Schema(
 talkSchema.pre("remove", async function (next) {
   try {
     //find current member talks
-    const member = await Member.findById(this.member).populate("talksTest");
+    const member = await Member.findById(this.member).populate("talks");
 
     //Filter out talk being removed
-    const memberTalks = member.talksTest.filter(
-      (talk) => talk._id.toString() !== this._id.toString()
-    );
+    const memberTalks = member.talks.filter((talk) => talk._id.toString() !== this._id.toString());
 
     //Determine new lastTalkDate
     const lastTalkDate = memberTalks.length === 0 ? null : getLastTalkDate(memberTalks);
 
     //Update member
     const updateMember = await Member.findByIdAndUpdate(this.member, {
-      $pull: { talksTest: this._id },
+      $pull: { talks: this._id },
       $inc: { talkCount: -1 },
       lastTalkDate,
     });
 
     //Remove talk from sacrament meeting document
     const updateMeeting = await Meeting.findByIdAndUpdate(this.sacramentMeeting, {
-      $pull: { talksTest: this._id },
+      $pull: { talks: this._id },
     });
   } catch (error) {
     console.error(error);
@@ -72,20 +70,20 @@ talkSchema.pre("remove", async function (next) {
 talkSchema.post("save", async function (doc) {
   try {
     //Add talk to member, and update talkCount
-    const member = await Member.findById(doc.member).populate("talksTest");
+    const member = await Member.findById(doc.member).populate("talks");
 
-    const lastTalkDate = getLastTalkDate(member.talksTest, doc.date);
+    const lastTalkDate = getLastTalkDate(member.talks, doc.date);
 
     //Update member
     const updateMember = await Member.findByIdAndUpdate(doc.member, {
-      $push: { talksTest: doc._id },
+      $push: { talks: doc._id },
       $inc: { talkCount: 1 },
       lastTalkDate,
     });
 
     //Add talk to meeting
     const meeting = await Meeting.findById(doc.sacramentMeeting);
-    meeting.talksTest.push(doc._id);
+    meeting.talks.push(doc._id);
     await meeting.save();
   } catch (error) {
     console.error(error);
