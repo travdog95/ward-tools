@@ -35,7 +35,7 @@ const getSacramentMeetingsByYear = asyncHandler(async (req, res) => {
       year,
     }).sort({ date: -1 });
   }
-  res.status(200).json({ count: sacramentMeetings.length, sacramentMeetings });
+  res.status(200).json({ count: sacramentMeetings.length, data: sacramentMeetings });
 });
 
 // @desc    Get sacramentMeetings
@@ -54,7 +54,7 @@ const getSacramentMeetings = asyncHandler(async (req, res) => {
     sacramentMeetings = await SacramentMeeting.find().sort({ date: -1 });
   }
 
-  res.status(200).json(sacramentMeetings);
+  res.status(200).json({ count: sacramentMeetings.length, data: sacramentMeetings });
 });
 
 // @desc    Get sacramentMeeting

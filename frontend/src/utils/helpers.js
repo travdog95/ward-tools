@@ -1,4 +1,13 @@
-import { format, parseISO, differenceInYears } from "date-fns";
+import {
+  format,
+  parseISO,
+  differenceInYears,
+  getYear,
+  intervalToDuration,
+  formatDuration,
+  daysToWeeks,
+  differenceInDays,
+} from "date-fns";
 
 export const calculateAge = (birthDate) => {
   if (!birthDate) return;
@@ -7,7 +16,9 @@ export const calculateAge = (birthDate) => {
 
 export const formatDate = (date, dateFormat) => {
   if (!date || !dateFormat) return;
-  return format(parseISO(date), dateFormat);
+
+  const validateDate = typeof date === "string" ? parseISO(date) : date;
+  return format(validateDate, dateFormat);
 };
 
 export const formatPhone = (phoneNumber) => {
@@ -49,4 +60,34 @@ export const getMeetingPrayers = (members, meeting) => {
   const memberBenediction = memberBenedictionArray[0] ? memberBenedictionArray[0] : null;
 
   return { invocation, memberInvocation, benediction, memberBenediction };
+};
+
+export const isYouth = (birthDate) => {
+  const validatedBirthDate = typeof birthDate === "string" ? parseISO(birthDate) : birthDate;
+  const age = calculateAge(birthDate);
+  const birthYear = getYear(validatedBirthDate);
+  const currentYear = getYear(new Date());
+
+  return age < 19 && currentYear - birthYear >= 12;
+};
+
+export const calcAndFormatDuration = (date) => {
+  const validatedDate = typeof date === "string" ? parseISO(date) : date;
+  const diffDays = Math.abs(differenceInDays(validatedDate, new Date()));
+  const duration = intervalToDuration({ start: validatedDate, end: new Date() });
+  duration.weeks = daysToWeeks(duration.days);
+
+  let durationFormat = [];
+  if (diffDays < 7) {
+    durationFormat = ["days"];
+  } else if (diffDays >= 7 && diffDays <= 30) {
+    durationFormat = ["weeks", "days"];
+  } else {
+    durationFormat = ["years", "months"];
+  }
+
+  return formatDuration(duration, {
+    format: durationFormat,
+    delimiter: ", ",
+  });
 };

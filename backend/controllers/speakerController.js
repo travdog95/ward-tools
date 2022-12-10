@@ -11,7 +11,7 @@ const getSpeakers = asyncHandler(async (req, res) => {
   let speakers = [];
   let members = [];
 
-  members = await Member.find({ firstName: "Sabrina" }).populate("talks").populate("prayers");
+  members = await Member.find().populate("talks");
 
   res.status(200).json(members);
 });

@@ -200,7 +200,7 @@ export const meetingsSlice = createSlice({
       })
       .addCase(getMeetingsByYear.fulfilled, (state, action) => {
         const year = parseInt(action.meta.arg.year);
-        const meetings = action.payload;
+        const meetings = action.payload.data;
         state.isLoading = false;
         state.isSuccess = true;
         state.meetings.idsByYear[year] = meetings.map((meeting) => {
@@ -218,7 +218,7 @@ export const meetingsSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(getMeetings.fulfilled, (state, action) => {
-        const meetings = action.payload;
+        const meetings = action.payload.data;
         state.isLoading = false;
         state.isSuccess = true;
         state.meetings.allIds = meetings.map((meeting) => {
