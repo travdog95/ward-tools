@@ -1,15 +1,19 @@
 import { useState } from "react";
 // import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { getYear, parseISO } from "date-fns";
 
 import SpeakerTrackerFilter from "./SpeakerTrackerFilter";
 import SpeakerTrackerTable from "./SpeakerTrackerTable";
+import { setSpeakerFilters } from "../members/membersSlice";
 import { calculateAge } from "../../utils/helpers";
 import "./speakerTracker.css";
 
 const SpeakerTracker = () => {
-  const { members } = useSelector((state) => state.members);
+  const dispatch = useDispatch();
+  const { allIds, byId, speakerFilters } = useSelector((state) => state.members);
+  const memberIds = allIds;
+  const membersById = byId;
 
   const filterMembers = (speakerType, willing) => {
     let matchWilling = false;
@@ -17,7 +21,8 @@ const SpeakerTracker = () => {
     let willingFilterBool = false;
     let isOldEnough = false;
 
-    return members.filter((member) => {
+    const filteredIds = memberIds.filter((memberId) => {
+      const member = membersById[memberId];
       const age = calculateAge(member.birthDate);
       isOldEnough = getYear(new Date()) - getYear(parseISO(member.birthDate)) >= 12;
 
@@ -44,22 +49,27 @@ const SpeakerTracker = () => {
       }
       return matchSpeakerType && matchWilling && isOldEnough;
     });
+
+    return filteredIds.map((id) => membersById[id]);
   };
 
-  const [speakerTypeFilter, setSpeakerTypeFilter] = useState("all");
-  const [willingFilter, setWillingFilter] = useState("all");
   const [filteredMembers, setFilteredMembers] = useState(() => {
-    return filterMembers(speakerTypeFilter, willingFilter);
+    return filterMembers(speakerFilters.speakerType, speakerFilters.willing);
   });
 
   const handleSpeakerType = (e, newSpeakerTypeFilter) => {
-    setSpeakerTypeFilter(newSpeakerTypeFilter);
-    setFilteredMembers(filterMembers(newSpeakerTypeFilter, willingFilter));
+    dispatch(
+      setSpeakerFilters({ speakerType: newSpeakerTypeFilter, willing: speakerFilters.willing })
+    );
+    setFilteredMembers(filterMembers(newSpeakerTypeFilter, speakerFilters.willing));
   };
 
   const handleWillingFilter = (e, newWillingFilter) => {
-    setWillingFilter(newWillingFilter);
-    setFilteredMembers(filterMembers(speakerTypeFilter, newWillingFilter));
+    dispatch(
+      setSpeakerFilters({ speakerType: speakerFilters.speakerType, willing: newWillingFilter })
+    );
+
+    setFilteredMembers(filterMembers(speakerFilters.speakerType, newWillingFilter));
   };
 
   return (
@@ -67,8 +77,8 @@ const SpeakerTracker = () => {
       <h1>Speaker Tracker</h1>
       <SpeakerTrackerFilter
         onChangeSpeakerType={handleSpeakerType}
-        speakerTypeFilter={speakerTypeFilter}
-        willingFilter={willingFilter}
+        speakerTypeFilter={speakerFilters.speakerType}
+        willingFilter={speakerFilters.willing}
         onChangeWilling={handleWillingFilter}
       />
       <SpeakerTrackerTable speakers={filteredMembers} />

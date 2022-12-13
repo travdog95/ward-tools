@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import meetingsService from "./meetingsService";
+import { formatByIds } from "../../utils/helpers";
 
 const initialState = {
   isError: false,
@@ -27,16 +28,6 @@ const initialState = {
   currentMeetingId: 0,
   currentTalkId: 0,
   currentPrayerId: 0,
-};
-
-const formatByIds = (items) => {
-  const itemsObject = {};
-
-  items.forEach((item) => {
-    itemsObject[item._id] = item;
-  });
-
-  return itemsObject;
 };
 
 export const getMeeting = createAsyncThunk("meetings/get", async (meetingId, thunkAPI) => {

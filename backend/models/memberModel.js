@@ -33,6 +33,7 @@ const memberSchema = mongoose.Schema(
     prayerCount: { type: Number, default: 0 },
     lastPrayerDate: { type: Date, default: null },
     lastTalkDate: { type: Date, default: null },
+    isServingMission: { type: Boolean, default: false },
   },
   {
     timestamps: true,

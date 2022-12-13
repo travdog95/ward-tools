@@ -91,3 +91,13 @@ export const calcAndFormatDuration = (date) => {
     delimiter: ", ",
   });
 };
+
+export const formatByIds = (items) => {
+  const itemsObject = {};
+
+  items.forEach((item) => {
+    itemsObject[item._id] = item;
+  });
+
+  return itemsObject;
+};

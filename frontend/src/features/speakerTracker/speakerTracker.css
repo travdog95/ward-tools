@@ -10,3 +10,7 @@
   font-weight: bold;
   margin-bottom: 0.25rem;
 }
+
+.switch-label {
+  width: 60px;
+}
