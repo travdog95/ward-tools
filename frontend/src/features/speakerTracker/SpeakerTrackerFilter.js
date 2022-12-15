@@ -4,6 +4,11 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 
 const SpeakerTrackerFilter = (props) => {
   const { speakerTypeFilter, onChangeSpeakerType, willingFilter, onChangeWilling } = props;
+  const toggleStyle = {
+    fontWeight: "bold",
+    textTransform: "capitalize",
+    fontSize: "1rem",
+  };
   return (
     <div className="speaker-tracker-filters">
       <div className="speaker-tracker-filter-group">
@@ -13,14 +18,15 @@ const SpeakerTrackerFilter = (props) => {
           exclusive
           onChange={onChangeSpeakerType}
           aria-label="speaker type"
+          size="small"
         >
-          <ToggleButton value="all" aria-label="all">
+          <ToggleButton value="all" aria-label="all" sx={toggleStyle}>
             All
           </ToggleButton>
-          <ToggleButton value="adult" aria-label="adult">
+          <ToggleButton value="adult" aria-label="adult" sx={toggleStyle}>
             Adult
           </ToggleButton>
-          <ToggleButton value="youth" aria-label="youth">
+          <ToggleButton value="youth" aria-label="youth" sx={toggleStyle}>
             Youth
           </ToggleButton>
         </ToggleButtonGroup>
@@ -32,14 +38,15 @@ const SpeakerTrackerFilter = (props) => {
           exclusive
           onChange={onChangeWilling}
           aria-label="willing"
+          size="small"
         >
-          <ToggleButton value="all" aria-label="all">
+          <ToggleButton value="all" aria-label="all" sx={toggleStyle}>
             All
           </ToggleButton>
-          <ToggleButton value="yes" aria-label="yes">
+          <ToggleButton value="yes" aria-label="yes" sx={toggleStyle}>
             Yes
           </ToggleButton>
-          <ToggleButton value="no" aria-label="no">
+          <ToggleButton value="no" aria-label="no" sx={toggleStyle}>
             No
           </ToggleButton>
         </ToggleButtonGroup>

@@ -25,6 +25,7 @@ const SpeakerTracker = () => {
       const member = membersById[memberId];
       const age = calculateAge(member.birthDate);
       isOldEnough = getYear(new Date()) - getYear(parseISO(member.birthDate)) >= 12;
+      const notServingMission = member.isServingMission ? !member.isServingMission : true;
 
       //Reset match variables
       matchWilling = false;
@@ -47,7 +48,7 @@ const SpeakerTracker = () => {
 
         matchSpeakerType = memberType === speakerType;
       }
-      return matchSpeakerType && matchWilling && isOldEnough;
+      return matchSpeakerType && matchWilling && isOldEnough && notServingMission;
     });
 
     return filteredIds.map((id) => membersById[id]);

@@ -13,6 +13,8 @@ import WardList from "./pages/WardList";
 import Member from "./pages/Member";
 import Import from "./pages/Import";
 import SacramentMeetings from "./pages/SacramentMeetings";
+import PrayerTracker from "./pages/PrayerTracker";
+
 import { getMembers } from "./features/members/membersSlice";
 import Spinner from "./components/Spinner";
 import "./components/components.css";
@@ -52,6 +54,7 @@ const App = () => {
             <Route path="/member" element={<Member />} />
             <Route path="/import" element={<Import />} />
             <Route path="/sacramentmeetings" element={<SacramentMeetings />} />
+            <Route path="/prayers" element={<PrayerTracker />} />
           </Routes>
         </div>
       </Router>

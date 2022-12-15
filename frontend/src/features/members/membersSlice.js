@@ -13,14 +13,28 @@ const initialState = {
   allIds: [],
   speakerFilters: {
     speakerType: "all",
-    willing: "all",
+    willing: "yes",
   },
+  prayerFilters: { willing: "yes" },
 };
 
 export const getMembers = createAsyncThunk("members/getAll", async (_, thunkAPI) => {
   try {
     const token = thunkAPI.getState().auth.user.token;
     return await membersService.getMembers(token);
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
+export const getMember = createAsyncThunk("members/get", async (id, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState().auth.user.token;
+    return await membersService.getMember(id, token);
   } catch (error) {
     const message =
       (error.response && error.response.data && error.response.data.message) ||
@@ -52,11 +66,27 @@ export const membersSlice = createSlice({
     setSpeakerFilters(state, action) {
       return { ...state, speakerFilters: action.payload };
     },
+    setPrayerFilters(state, action) {
+      return { ...state, prayerFilters: action.payload };
+    },
   },
   //Asynchronous functions using thunk
   extraReducers: (builder) => {
     builder
       //handle pending, fulfilled and rejected states for registration
+      .addCase(getMember.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getMember.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        // state.member = action.payload;
+      })
+      .addCase(getMember.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
       .addCase(getMembers.pending, (state) => {
         state.isLoading = true;
       })
@@ -91,6 +121,6 @@ export const membersSlice = createSlice({
   },
 });
 
-export const { reset, setSpeakerFilters } = membersSlice.actions;
+export const { reset, setSpeakerFilters, setPrayerFilters } = membersSlice.actions;
 
 export default membersSlice.reducer;

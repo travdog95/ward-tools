@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import ToggleButtons from "../../../components/ToggleButtons";
-import { updateMember } from "../memberSlice";
+import { updateMember } from "../../members/membersSlice";
 import { calculateAge, formatDate, formatPhone } from "../../../utils/helpers";
 
 const ProfileForm = (props) => {
@@ -14,9 +14,13 @@ const ProfileForm = (props) => {
   const [memberWillingToPray, setMemberWillingToPray] = useState(member.isWillingToPray);
   const [memberWillingToSpeak, setMemberWillingToSpeak] = useState(member.isWillingToSpeak);
   const [memberContactForTithing, setMemberContactForTithing] = useState(member.contactForTithing);
+  const [servingMission, setServingMission] = useState(
+    member.isServingMission ? member.isServingMission : false
+  );
+
   const [idBeingUpdated, setIdBeingUpdated] = useState("");
 
-  const { updatingMember } = useSelector((state) => state.member);
+  const { isUpdating } = useSelector((state) => state.members);
 
   const handleWillingToPrayChange = (event, newValue) => {
     if (newValue !== null) {
@@ -39,6 +43,14 @@ const ProfileForm = (props) => {
       setMemberContactForTithing(newValue);
       setIdBeingUpdated("tithing");
       dispatch(updateMember({ id: member._id, contactForTithing: newValue }));
+    }
+  };
+
+  const handleServingMissionChange = (event, newValue) => {
+    if (newValue !== null) {
+      setServingMission(newValue);
+      setIdBeingUpdated("mission");
+      dispatch(updateMember({ id: member._id, isServingMission: newValue }));
     }
   };
 
@@ -78,7 +90,7 @@ const ProfileForm = (props) => {
             value={memberWillingToPray}
             onChange={handleWillingToPrayChange}
             label="Willing to Pray"
-            updating={updatingMember}
+            updating={isUpdating}
             id="pray"
             idBeingUpdated={idBeingUpdated}
           />
@@ -91,7 +103,7 @@ const ProfileForm = (props) => {
             value={memberWillingToSpeak}
             onChange={handleWillingToSpeakChange}
             label="Willing to Speak"
-            updating={updatingMember}
+            updating={isUpdating}
             id="speak"
             idBeingUpdated={idBeingUpdated}
           />
@@ -104,8 +116,21 @@ const ProfileForm = (props) => {
             value={memberContactForTithing}
             onChange={handleContactForTithingChange}
             label="Contact for Tithing to Speak"
-            updating={updatingMember}
+            updating={isUpdating}
             id="tithing"
+            idBeingUpdated={idBeingUpdated}
+          />
+        </div>
+      </div>
+      <div className="form-row">
+        <div className="label">Serving Mission?</div>
+        <div className="value">
+          <ToggleButtons
+            value={servingMission}
+            onChange={handleServingMissionChange}
+            label="Serving Mission"
+            updating={isUpdating}
+            id="mission"
             idBeingUpdated={idBeingUpdated}
           />
         </div>

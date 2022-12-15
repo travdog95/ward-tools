@@ -4,6 +4,12 @@
   align-items: center;
   justify-content: center;
   gap: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.data-grid-header {
+  font-size: 1rem;
+  background-color: hsl(210, 16%, 93%);
 }
 
 .filter-label {
@@ -13,4 +19,8 @@
 
 .switch-label {
   width: 60px;
+}
+
+.even {
+  background-color: hsl(210, 16%, 93%);
 }

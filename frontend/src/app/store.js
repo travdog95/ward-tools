@@ -7,7 +7,6 @@ import meetingsReducer from "../features/meetings/meetingsSlice";
 import talksReducer from "../features/talks/talksSlice";
 import prayersReducer from "../features/prayers/prayersSlice";
 import importDataReducer from "../features/importData/importDataSlice";
-import speakersReducer from "../features/speakerTracker/speakersSlice";
 
 export const store = configureStore({
   reducer: {
@@ -19,6 +18,5 @@ export const store = configureStore({
     talks: talksReducer,
     prayers: prayersReducer,
     importData: importDataReducer,
-    speakers: speakersReducer,
   },
 });

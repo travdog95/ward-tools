@@ -33,6 +33,9 @@ const Header = () => {
           <div className="logo">
             <Link to="/sacramentmeetings">Sacrament Meetings</Link>
           </div>
+          <div className="logo">
+            <Link to="/prayers">Prayers</Link>
+          </div>
         </>
       ) : null}
       <ul>

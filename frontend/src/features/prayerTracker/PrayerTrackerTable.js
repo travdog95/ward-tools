@@ -1,25 +1,25 @@
-// import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+// import { useNavigate } from "react-router-dom";
 import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
 
 import { calculateAge, formatDate, isYouth, calcAndFormatDuration } from "../../utils/helpers";
-// import { updateMember } from "../members/membersSlice";
+import { updateMember } from "../members/membersSlice";
 
-const SpeakerTrackerTable = (props) => {
-  const { speakers } = props;
+const PrayerTrackerTable = (props) => {
+  const { members } = props;
 
-  // const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  // const navigate = useNavigate();
 
   // const { isUpdating } = useSelector((state) => state.members);
 
-  // const handleWillingUpdate = (row) => {
-  //   dispatch(updateMember({ id: row._id, isWillingToSpeak: !row.isWillingToSpeak }));
-  // };
-
-  const handleRowClick = (params) => {
-    navigate("/member/" + params.row._id);
+  const handleWillingUpdate = (row) => {
+    dispatch(updateMember({ id: row._id, isWillingToPray: !row.isWillingToPray }));
   };
+
+  // const handleRowClick = (params) => {
+  //   navigate("/member/" + params.row._id);
+  // };
 
   const columns = [
     {
@@ -48,8 +48,8 @@ const SpeakerTrackerTable = (props) => {
       headerClassName: "data-grid-header",
     },
     {
-      field: "lastTalkDate",
-      headerName: "Last Spoke",
+      field: "lastPrayerDate",
+      headerName: "Last Prayed",
       width: 280,
       type: "date",
       valueFormatter: (params) => {
@@ -64,7 +64,7 @@ const SpeakerTrackerTable = (props) => {
       headerClassName: "data-grid-header",
     },
     {
-      field: "isWillingToSpeak",
+      field: "isWillingToPray",
       headerName: "Willing",
       width: 120,
       renderCell: (params) => {
@@ -72,9 +72,9 @@ const SpeakerTrackerTable = (props) => {
         return (
           <>
             <div className="switch-label">{label}</div>
-            {/* <button className="btn btn-small" onClick={() => handleWillingUpdate(params.row)}>
+            <button className="btn btn-small" onClick={() => handleWillingUpdate(params.row)}>
               Toggle
-            </button> */}
+            </button>
           </>
         );
       },
@@ -82,7 +82,7 @@ const SpeakerTrackerTable = (props) => {
     },
   ];
 
-  const rows = speakers.map((member, index) => {
+  const rows = members.map((member, index) => {
     return { ...member, ...{ id: index } };
   });
 
@@ -94,7 +94,7 @@ const SpeakerTrackerTable = (props) => {
             <DataGrid
               rows={rows}
               columns={columns}
-              onRowClick={handleRowClick}
+              // onRowClick={handleRowClick}
               components={{ Toolbar: GridToolbarQuickFilter }}
               density="compact"
               rowsPerPageOptions={[20, 50, 100]}
@@ -113,4 +113,4 @@ const SpeakerTrackerTable = (props) => {
   );
 };
 
-export default SpeakerTrackerTable;
+export default PrayerTrackerTable;
