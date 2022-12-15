@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import ToggleButtons from "../../../components/ToggleButtons";
-import { updateMember } from "../../members/membersSlice";
+import { updateMember } from "../membersSlice";
 import { calculateAge, formatDate, formatPhone } from "../../../utils/helpers";
 
 const ProfileForm = (props) => {
@@ -10,7 +10,7 @@ const ProfileForm = (props) => {
   const { member } = props;
   const age = calculateAge(member.birthDate);
   const birthday = formatDate(member.birthDate, "LLL d");
-
+  console.log(member);
   const [memberWillingToPray, setMemberWillingToPray] = useState(member.isWillingToPray);
   const [memberWillingToSpeak, setMemberWillingToSpeak] = useState(member.isWillingToSpeak);
   const [memberContactForTithing, setMemberContactForTithing] = useState(member.contactForTithing);

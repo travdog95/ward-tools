@@ -28,9 +28,22 @@ const updateMember = async (id, member, token) => {
   return response.data;
 };
 
+//Get Member
+const getMember = async (id, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.get(API_URL + id, config);
+
+  return response.data;
+};
+
 const membersService = {
   getMembers,
   updateMember,
+  getMember,
 };
 
 export default membersService;

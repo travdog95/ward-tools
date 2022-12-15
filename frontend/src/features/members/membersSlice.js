@@ -8,7 +8,7 @@ const initialState = {
   isLoading: false,
   isUpdating: false,
   message: "",
-  members: [],
+  // members: [],
   byId: {},
   allIds: [],
   speakerFilters: {
@@ -95,10 +95,9 @@ export const membersSlice = createSlice({
         state.allIds = members.map((member) => {
           return member._id;
         });
-        state.byId = { ...state.members.byId, ...formatByIds(members) };
+        state.byId = { ...state.byId, ...formatByIds(members) };
         state.isLoading = false;
         state.isSuccess = true;
-        state.members = members;
       })
       .addCase(getMembers.rejected, (state, action) => {
         state.isLoading = false;

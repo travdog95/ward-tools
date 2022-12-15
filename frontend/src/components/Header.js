@@ -17,12 +17,15 @@ const Header = () => {
   return (
     <header className="header">
       <div className="logo">
-        <Link to="/">Home</Link>
+        <Link to="/">Speaker Tracker</Link>
       </div>
       {user ? (
         <>
           <div className="logo">
-            <Link to="/dataFiles">Data Files</Link>
+            <Link to="/prayers">Prayers</Link>
+          </div>
+          <div className="logo">
+            <Link to="/sacramentmeetings">Sacrament Meetings</Link>
           </div>
           <div className="logo">
             <Link to="/wardlist">Ward List</Link>
@@ -31,10 +34,7 @@ const Header = () => {
             <Link to="/member">Members</Link>
           </div>
           <div className="logo">
-            <Link to="/sacramentmeetings">Sacrament Meetings</Link>
-          </div>
-          <div className="logo">
-            <Link to="/prayers">Prayers</Link>
+            <Link to="/dataFiles">Data Files</Link>
           </div>
         </>
       ) : null}

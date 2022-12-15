@@ -8,8 +8,10 @@ const WardList = () => {
   const navigate = useNavigate();
 
   const { user } = useSelector((state) => state.auth);
-  const { members } = useSelector((state) => state.members);
-
+  const { allIds, byId } = useSelector((state) => state.members);
+  const members = allIds.map((memberId) => {
+    return byId[memberId];
+  });
   useEffect(() => {
     if (!user) {
       navigate("/login");

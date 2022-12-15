@@ -14,7 +14,10 @@ const SacramentMeetingRow = ({ meeting }) => {
   const { isError, message, updatingMeeting, currentMeetingId } = useSelector(
     (state) => state.meetings
   );
-  const { members } = useSelector((state) => state.members);
+  const { allIds, byId } = useSelector((state) => state.members);
+  const members = allIds.map((memberId) => {
+    return byId[memberId];
+  });
 
   const { invocation, memberInvocation, benediction, memberBenediction } = getMeetingPrayers(
     members,

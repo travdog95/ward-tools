@@ -1,17 +1,19 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import ProfileForm from "../features/member/components/ProfileForm";
-import ProfileDetail from "../features/member/components/ProfileDetail";
+import { getMembers } from "../features/members/membersSlice";
+import ProfileForm from "../features/members/components/ProfileForm";
+import ProfileDetail from "../features/members/components/ProfileDetail";
 import MemberAutoComplete from "../components/MemberAutoComplete";
 import Spinner from "../components/Spinner";
-import "../features/member/components/member.css";
+import "../features/members/components/member.css";
 
 const Member = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const { user } = useSelector((state) => state.auth);
   const { byId, allIds, isLoading, isError, message } = useSelector((state) => state.members);
@@ -24,6 +26,10 @@ const Member = () => {
   const members = allIds.map((memberId) => {
     return byId[memberId];
   });
+
+  if (!member && id) {
+    dispatch(getMembers());
+  }
 
   useEffect(() => {
     if (isError) {
@@ -54,7 +60,7 @@ const Member = () => {
         member={searchValue}
         className=""
       />
-      {id ? (
+      {id && member ? (
         <section className="profile-container">
           <div className="profile-header">
             <a href={`${member.prefferedNameURL}`} target="_blank" rel="noreferrer">

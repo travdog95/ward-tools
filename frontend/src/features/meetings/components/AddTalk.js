@@ -15,7 +15,10 @@ const AddTalk = ({ meeting }) => {
   const [member, setMember] = useState(null);
 
   const { addingTalk, currentMeetingId, isError, message } = useSelector((state) => state.meetings);
-  const { members } = useSelector((state) => state.members);
+  const { allIds, byId } = useSelector((state) => state.members);
+  const members = allIds.map((memberId) => {
+    return byId[memberId];
+  });
 
   const handleAddTalk = () => {
     if (member) {
