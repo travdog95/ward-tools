@@ -1,25 +1,16 @@
-import { useDispatch } from "react-redux";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
 
 import { calculateAge, formatDate, isYouth, calcAndFormatDuration } from "../../utils/helpers";
-import { updateMember } from "../members/membersSlice";
 
 const PrayerTrackerTable = (props) => {
   const { members } = props;
 
-  const dispatch = useDispatch();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
-  // const { isUpdating } = useSelector((state) => state.members);
-
-  const handleWillingUpdate = (row) => {
-    dispatch(updateMember({ id: row._id, isWillingToPray: !row.isWillingToPray }));
+  const handleRowClick = (params) => {
+    navigate("/member/" + params.row._id);
   };
-
-  // const handleRowClick = (params) => {
-  //   navigate("/member/" + params.row._id);
-  // };
 
   const columns = [
     {
@@ -72,9 +63,6 @@ const PrayerTrackerTable = (props) => {
         return (
           <>
             <div className="switch-label">{label}</div>
-            <button className="btn btn-small" onClick={() => handleWillingUpdate(params.row)}>
-              Toggle
-            </button>
           </>
         );
       },
@@ -94,13 +82,13 @@ const PrayerTrackerTable = (props) => {
             <DataGrid
               rows={rows}
               columns={columns}
-              // onRowClick={handleRowClick}
+              onRowClick={handleRowClick}
               components={{ Toolbar: GridToolbarQuickFilter }}
               density="compact"
               rowsPerPageOptions={[20, 50, 100]}
               initialState={{
                 pagination: { pageSize: 50 },
-                sorting: { sortModel: [{ field: "lastTalkDate", sort: "asc" }] },
+                sorting: { sortModel: [{ field: "lastPrayerDate", sort: "asc" }] },
               }}
               getRowClassName={(params) =>
                 params.indexRelativeToCurrentPage % 2 === 0 ? "even" : "odd"

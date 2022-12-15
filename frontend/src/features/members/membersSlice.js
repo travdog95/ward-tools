@@ -7,8 +7,9 @@ const initialState = {
   isSuccess: false,
   isLoading: false,
   isUpdating: false,
+  isLoadingMember: false,
   message: "",
-  // members: [],
+  member: {},
   byId: {},
   allIds: [],
   speakerFilters: {
@@ -75,15 +76,15 @@ export const membersSlice = createSlice({
     builder
       //handle pending, fulfilled and rejected states for registration
       .addCase(getMember.pending, (state) => {
-        state.isLoading = true;
+        state.isLoadingMember = true;
       })
       .addCase(getMember.fulfilled, (state, action) => {
-        state.isLoading = false;
+        state.isLoadingMember = false;
         state.isSuccess = true;
-        // state.member = action.payload;
+        state.member = action.payload;
       })
       .addCase(getMember.rejected, (state, action) => {
-        state.isLoading = false;
+        state.isLoadingMember = false;
         state.isError = true;
         state.message = action.payload;
       })

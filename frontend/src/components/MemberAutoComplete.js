@@ -8,6 +8,11 @@ const MemberAutoComplete = (props) => {
   const { member, members, onChange, label, className, size } = props;
   //Default size to small
   const controlSize = size ? size : "small";
+  members.sort(function (a, b) {
+    if (a.preferredName < b.preferredName) return -1;
+    if (a.preferredName > b.preferredName) return 1;
+    return 0;
+  });
 
   return (
     <AutoComplete

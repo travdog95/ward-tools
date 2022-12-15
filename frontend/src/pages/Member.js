@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import { getMembers } from "../features/members/membersSlice";
+import { getMember } from "../features/members/membersSlice";
 import ProfileForm from "../features/members/components/ProfileForm";
 import ProfileDetail from "../features/members/components/ProfileDetail";
 import MemberAutoComplete from "../components/MemberAutoComplete";
@@ -16,20 +16,17 @@ const Member = () => {
   const dispatch = useDispatch();
 
   const { user } = useSelector((state) => state.auth);
-  const { byId, allIds, isLoading, isError, message } = useSelector((state) => state.members);
-
-  const [searchValue, setSearchValue] = useState(null);
+  const { byId, allIds, isError, message, member, isLoadingMember } = useSelector(
+    (state) => state.members
+  );
 
   const { id } = useParams();
 
-  const member = byId[id];
   const members = allIds.map((memberId) => {
     return byId[memberId];
   });
 
-  if (!member && id) {
-    dispatch(getMembers());
-  }
+  const [searchValue, setSearchValue] = useState(null);
 
   useEffect(() => {
     if (isError) {
@@ -39,9 +36,13 @@ const Member = () => {
     if (!user) {
       navigate("/login");
     }
-  }, [user, navigate, isError, message]);
 
-  if (isLoading) {
+    if (id) {
+      dispatch(getMember(id));
+    }
+  }, [user, navigate, isError, message, dispatch, id]);
+
+  if (isLoadingMember) {
     return <Spinner />;
   }
 

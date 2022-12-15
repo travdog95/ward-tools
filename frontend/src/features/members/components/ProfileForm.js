@@ -7,20 +7,21 @@ import { calculateAge, formatDate, formatPhone } from "../../../utils/helpers";
 
 const ProfileForm = (props) => {
   const dispatch = useDispatch();
+
+  const { isUpdating } = useSelector((state) => state.members);
+
   const { member } = props;
+
   const age = calculateAge(member.birthDate);
   const birthday = formatDate(member.birthDate, "LLL d");
-  console.log(member);
+
   const [memberWillingToPray, setMemberWillingToPray] = useState(member.isWillingToPray);
   const [memberWillingToSpeak, setMemberWillingToSpeak] = useState(member.isWillingToSpeak);
   const [memberContactForTithing, setMemberContactForTithing] = useState(member.contactForTithing);
   const [servingMission, setServingMission] = useState(
     member.isServingMission ? member.isServingMission : false
   );
-
   const [idBeingUpdated, setIdBeingUpdated] = useState("");
-
-  const { isUpdating } = useSelector((state) => state.members);
 
   const handleWillingToPrayChange = (event, newValue) => {
     if (newValue !== null) {

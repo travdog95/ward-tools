@@ -23,7 +23,7 @@ const memberSchema = mongoose.Schema(
     templeRecommendType: { type: String, default: "" },
     isWillingToSpeak: { type: Boolean, default: true },
     isWillingToPray: { type: Boolean, default: true },
-    contactForTithing: { type: Boolean },
+    contactForTithing: { type: Boolean, default: true },
     marriageDate: { type: Date, default: null },
     address1: { type: String, default: "" },
     address2: { type: String, default: "" },
