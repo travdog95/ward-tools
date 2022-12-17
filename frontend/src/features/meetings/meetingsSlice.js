@@ -1,4 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { getMonth } from "date-fns";
+
 import meetingsService from "./meetingsService";
 import { formatByIds } from "../../utils/helpers";
 
@@ -17,12 +19,10 @@ const initialState = {
   meetings: {
     byId: {},
     allIds: [],
-    filteredIds: [],
-    idsByYear: {},
   },
   filters: {
     year: new Date().getFullYear(),
-    month: 0,
+    month: getMonth(new Date()),
     search: "",
   },
   currentMeetingId: 0,
@@ -56,18 +56,31 @@ export const getMeetings = createAsyncThunk("meetings/getAll", async (params, th
   }
 });
 
-export const getMeetingsByYear = createAsyncThunk("meetings/byYear", async (params, thunkAPI) => {
-  try {
-    const token = thunkAPI.getState().auth.user.token;
-    return await meetingsService.getMeetings(params, token);
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) ||
-      error.message ||
-      error.toString();
-    return thunkAPI.rejectWithValue(message);
-  }
-});
+// export const getMeetingsByYear = createAsyncThunk("meetings/byYear", async (params, thunkAPI) => {
+//   try {
+//     const token = thunkAPI.getState().auth.user.token;
+//     return await meetingsService.getMeetings(params, token);
+//   } catch (error) {
+//     const message =
+//       (error.response && error.response.data && error.response.data.message) ||
+//       error.message ||
+//       error.toString();
+//     return thunkAPI.rejectWithValue(message);
+//   }
+// });
+
+// export const getMeetingsByMonth = createAsyncThunk("meetings/byMonth", async (params, thunkAPI) => {
+//   try {
+//     const token = thunkAPI.getState().auth.user.token;
+//     return await meetingsService.getMeetings(params, token);
+//   } catch (error) {
+//     const message =
+//       (error.response && error.response.data && error.response.data.message) ||
+//       error.message ||
+//       error.toString();
+//     return thunkAPI.rejectWithValue(message);
+//   }
+// });
 
 export const updateMeeting = createAsyncThunk("meetings/update", async (meeting, thunkAPI) => {
   const id = meeting.id;
@@ -168,6 +181,9 @@ export const meetingsSlice = createSlice({
   initialState,
   reducers: {
     reset: (state) => initialState,
+    setFilters(state, action) {
+      return { ...state, filters: { ...action.payload } };
+    },
   },
   //Asynchronous functions using thunk
   extraReducers: (builder) => {
@@ -186,25 +202,46 @@ export const meetingsSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
       })
-      .addCase(getMeetingsByYear.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(getMeetingsByYear.fulfilled, (state, action) => {
-        const year = parseInt(action.meta.arg.year);
-        const meetings = action.payload.data;
-        state.isLoading = false;
-        state.isSuccess = true;
-        state.meetings.idsByYear[year] = meetings.map((meeting) => {
-          return meeting._id;
-        });
-        state.meetings.byId = { ...state.meetings.byId, ...formatByIds(meetings) };
-        state.filters.year = year;
-      })
-      .addCase(getMeetingsByYear.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.message = action.payload;
-      })
+      // .addCase(getMeetingsByYear.pending, (state) => {
+      //   state.isLoading = true;
+      // })
+      // .addCase(getMeetingsByYear.fulfilled, (state, action) => {
+      //   const year = parseInt(action.meta.arg.year);
+      //   const meetings = action.payload.data;
+      //   state.isLoading = false;
+      //   state.isSuccess = true;
+      //   state.meetings.idsByYear[year] = meetings.map((meeting) => {
+      //     return meeting._id;
+      //   });
+      //   state.meetings.byId = { ...state.meetings.byId, ...formatByIds(meetings) };
+      //   state.filters.year = year;
+      // })
+      // .addCase(getMeetingsByYear.rejected, (state, action) => {
+      //   state.isLoading = false;
+      //   state.isError = true;
+      //   state.message = action.payload;
+      // })
+      // .addCase(getMeetingsByMonth.pending, (state) => {
+      //   state.isLoading = true;
+      // })
+      // .addCase(getMeetingsByMonth.fulfilled, (state, action) => {
+      //   const year = parseInt(action.meta.arg.year);
+      //   const month = parseInt(action.meta.arg.month);
+      //   // const meetings = action.payload.data;
+      //   state.isLoading = false;
+      //   state.isSuccess = true;
+      //   // state.meetings.idsByYear[year] = meetings.map((meeting) => {
+      //   //   return meeting._id;
+      //   // });
+      //   // state.meetings.byId = { ...state.meetings.byId, ...formatByIds(meetings) };
+      //   state.filters.year = year;
+      //   state.filters.month = month;
+      // })
+      // .addCase(getMeetingsByMonth.rejected, (state, action) => {
+      //   state.isLoading = false;
+      //   state.isError = true;
+      //   state.message = action.payload;
+      // })
       .addCase(getMeetings.pending, (state) => {
         state.isLoading = true;
       })
@@ -333,6 +370,6 @@ export const meetingsSlice = createSlice({
   },
 });
 
-export const { reset } = meetingsSlice.actions;
+export const { reset, setFilters } = meetingsSlice.actions;
 
 export default meetingsSlice.reducer;

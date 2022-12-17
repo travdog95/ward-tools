@@ -7,6 +7,7 @@ const {
   updateSacramentMeeting,
   patchSacramentMeeting,
   deleteSacramentMeeting,
+  getSacramentMeetingsByMonth,
   getSacramentMeetingsByYear,
   addSacramentMeetingsByYear,
   deleteSacramentMeetingsByYear,
@@ -20,6 +21,8 @@ router
   .get(protect, getSacramentMeetingsByYear)
   .delete(protect, deleteSacramentMeetingsByYear)
   .post(protect, addSacramentMeetingsByYear);
+
+router.route("/year-month/:yearMonth").get(protect, getSacramentMeetingsByMonth);
 
 router
   .route("/:id")

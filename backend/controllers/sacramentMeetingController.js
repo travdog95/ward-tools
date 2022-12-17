@@ -38,6 +38,48 @@ const getSacramentMeetingsByYear = asyncHandler(async (req, res) => {
   res.status(200).json({ count: sacramentMeetings.length, data: sacramentMeetings });
 });
 
+// @desc    Get sacramentMeetings by month
+// @router  GET /api/sacramentmeetings/year-month/:yearMonth
+//          :yearMonth should be "2022-08" for Aug 2022
+// @access  Private
+const getSacramentMeetingsByMonth = asyncHandler(async (req, res) => {
+  let sacramentMeetings = [];
+  const yearMonth = req.params.yearMonth;
+  const year = yearMonth.substring(0, 4);
+  const month = parseInt(yearMonth.substring(yearMonth.indexOf("-") + 1)) - 1;
+
+  if (yearMonth.length < 6) {
+    res.status(400);
+    throw new Error("Year/Month is invalid");
+  }
+
+  if (isNaN(year)) {
+    res.status(400);
+    throw new Error("Year is invalid");
+  }
+
+  if (month < 0 || month > 11) {
+    res.status(400);
+    throw new Error("Month is invalid");
+  }
+
+  if (req.query.ext) {
+    sacramentMeetings = await SacramentMeeting.find({
+      year,
+      month,
+    })
+      .sort({ date: 1 })
+      .populate("talks")
+      .populate("prayers");
+  } else {
+    sacramentMeetings = await SacramentMeeting.find({
+      year,
+      month,
+    }).sort({ date: 1 });
+  }
+  res.status(200).json({ count: sacramentMeetings.length, data: sacramentMeetings });
+});
+
 // @desc    Get sacramentMeetings
 // @router  GET /api/sacramentmeetings/
 // @access  Private
@@ -195,4 +237,5 @@ module.exports = {
   getSacramentMeeting,
   addSacramentMeetingsByYear,
   deleteSacramentMeetingsByYear,
+  getSacramentMeetingsByMonth,
 };

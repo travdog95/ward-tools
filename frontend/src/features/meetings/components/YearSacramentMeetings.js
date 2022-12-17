@@ -1,54 +1,61 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { Tabs, Tab, Box } from "@mui/material";
+import { getMonth } from "date-fns";
 
-import { getMeetingsByYear, addMeetingsByYear } from "../meetingsSlice";
-import SacramentMeetingRow from "./SacramentMeetingRow";
+import { setFilters } from "../meetingsSlice";
+import { MONTHS_SHORT } from "../../../app/constants";
+import SacramentMeetingsMonth from "./SacramentMeetingsMonth";
 import "./sacramentMeeting.css";
 
 const YearSacramentMeetings = ({ year }) => {
   const dispatch = useDispatch();
-  const { meetings, isLoading, isError, message, addingMeetings } = useSelector(
-    (state) => state.meetings
-  );
 
-  useEffect(() => {
-    if (!meetings.idsByYear[year]) {
-      dispatch(getMeetingsByYear({ year, ext: true }));
-    }
-  }, [dispatch, year, meetings.idsByYear]);
+  const currentMonth = getMonth(new Date());
+  const months = [];
+  let i = 0;
+  for (i; i < 12; i++) {
+    months.push(i);
+  }
 
-  const addMeetings = () => {
-    dispatch(addMeetingsByYear(year)).then(() => dispatch(getMeetingsByYear({ year, ext: true })));
+  const [monthTabValue, setMonthTabValue] = useState(currentMonth);
+
+  const handleMonthTabChange = (event, newValue) => {
+    dispatch(setFilters({ year, month: newValue }));
+    setMonthTabValue(newValue);
   };
-
-  if (addingMeetings) {
-    return "Adding meetings...";
-  }
-
-  if (isLoading) {
-    return "Loading...";
-  }
-
-  if (isError) {
-    console.error("Error loading sacrament meetings", message);
-    return "Error";
-  }
 
   return (
     <>
       <div className="sacrament-meetings-container">
-        {meetings.idsByYear[year] &&
-          meetings.idsByYear[year].map((meetingId, index) => {
-            return <SacramentMeetingRow key={index} meeting={meetings.byId[meetingId]} />;
-          })}
+        <Box sx={{ width: "100%" }}>
+          <Tabs
+            value={monthTabValue}
+            onChange={handleMonthTabChange}
+            textColor="secondary"
+            indicatorColor="secondary"
+            aria-label="Month Tabs"
+            variant="scrollable"
+            scrollButtons={true}
+          >
+            {months.map((month, index) => {
+              return <Tab key={index} value={month} label={MONTHS_SHORT[month]} />;
+            })}
+          </Tabs>
+          <SacramentMeetingsMonth
+            month={monthTabValue}
+            year={year}
+            label={MONTHS_SHORT[monthTabValue]}
+          />
+        </Box>
 
-        {meetings.idsByYear[year] && meetings.idsByYear[year].length === 0 ? (
+        {/* {meetings.idsByYear[year] && meetings.idsByYear[year].length === 0 ? (
           <>
             <button className="btn" onClick={addMeetings}>
               Add Meetings
             </button>
           </>
-        ) : null}
+        ) : null} */}
       </div>
     </>
   );

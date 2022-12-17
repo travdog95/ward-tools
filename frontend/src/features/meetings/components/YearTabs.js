@@ -1,18 +1,16 @@
 import { useState } from "react";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import Box from "@mui/material/Box";
+import { Tabs, Tab, Box } from "@mui/material";
 
 import YearSacramentMeetings from "./YearSacramentMeetings";
 
 const YearTabs = () => {
   const currentYear = new Date().getFullYear();
-  const [tabValue, setTabValue] = useState(currentYear.toString());
+  const [tabValue, setTabValue] = useState(currentYear);
 
   let years = [];
   for (let y = 0; y < 6; y++) {
     const year = currentYear + 1 - y;
-    years.push(year.toString());
+    years.push(year);
   }
 
   const handleTabChange = (event, newValue) => {

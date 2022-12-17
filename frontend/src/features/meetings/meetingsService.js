@@ -73,16 +73,22 @@ const updateTalk = async (id, talk, token) => {
 
 //Get Meetings
 const getMeetings = async (params, token) => {
-  const { year, ext } = params;
+  const { year, ext, month } = params;
 
-  let url = "";
+  let url = MEETINGS_API_URL;
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   };
 
-  url = year ? MEETINGS_API_URL + "year/" + year : MEETINGS_API_URL;
+  if (!isNaN(year) && !isNaN(month)) {
+    url += `year-month/${year}-${month}`;
+  }
+
+  if (!isNaN(year) && isNaN(month)) {
+    url += `year/${year}`;
+  }
 
   url = ext ? url + "?ext=true" : url;
 
