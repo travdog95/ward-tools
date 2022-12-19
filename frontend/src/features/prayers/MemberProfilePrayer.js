@@ -1,21 +1,20 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { formatDate } from "../../utils/helpers";
 import { getPrayersByMember } from "./prayersSlice";
 
-const MemberProfilePrayer = ({ memberId }) => {
+const MemberProfilePrayer = ({ member }) => {
   const dispatch = useDispatch();
 
   const [viewPrayers, setViewPrayers] = useState(false);
 
   const { prayers, isLoading, message, isError } = useSelector((state) => state.prayers);
 
-  useEffect(() => {
-    dispatch(getPrayersByMember(memberId));
-  }, [dispatch, memberId]);
-
-  const handlePrayerClick = () => {
+  const handlePrayerClick = (currentViewPray) => {
+    if (!currentViewPray) {
+      dispatch(getPrayersByMember(member._id));
+    }
     setViewPrayers(!viewPrayers);
   };
 
@@ -28,22 +27,18 @@ const MemberProfilePrayer = ({ memberId }) => {
     return <div>Error loading prayers!</div>;
   }
 
-  const numPrayers = prayers.length;
-  let lastPrayer = null;
-  if (numPrayers > 0) {
-    lastPrayer = prayers[numPrayers - 1];
-  }
+  const numPrayers = member.prayerCount;
 
   return (
     <>
       {numPrayers === 0 && <div>None!</div>}
 
       {viewPrayers && numPrayers > 0 && (
-        <div onClick={handlePrayerClick} className="member-profile-prayers">
-          {prayers.map((prayer) => {
+        <div onClick={() => handlePrayerClick(viewPrayers)} className="member-profile-prayers">
+          {prayers.map((prayer, index) => {
             return (
-              <div key={prayer._id} className="member-profile-prayer">
-                {formatDate(prayer.sacramentMeeting.date, "d-MMM-yyyy")}
+              <div key={index} className="member-profile-prayer">
+                {formatDate(prayer.date, "d-MMM-yyyy")}
               </div>
             );
           })}
@@ -51,8 +46,8 @@ const MemberProfilePrayer = ({ memberId }) => {
       )}
 
       {!viewPrayers && numPrayers > 0 && (
-        <div onClick={handlePrayerClick}>
-          ({numPrayers}) {formatDate(lastPrayer.sacramentMeeting.date, "d-MMM-yyyy")}
+        <div onClick={() => handlePrayerClick(viewPrayers)}>
+          ({numPrayers}) {formatDate(member.lastPrayerDate, "d-MMM-yyyy")}
         </div>
       )}
     </>

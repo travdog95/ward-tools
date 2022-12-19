@@ -2,10 +2,11 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import AutoUpdateTextField from "../../../components/AutoUpdateTextField";
-import { updateMeeting, updatePrayer, addPrayer } from "../meetingsSlice";
+import { updateMeeting } from "../meetingsSlice";
 import AddTalk from "./AddTalk";
 import TalkRow from "./TalkRow";
-import Prayer from "./Prayer";
+import AddPrayer from "./AddPrayer";
+import PrayerRow from "./PrayerRow";
 import { formatDate, getMeetingPrayers } from "../../../utils/helpers";
 
 const SacramentMeetingRow = ({ meeting }) => {
@@ -26,8 +27,6 @@ const SacramentMeetingRow = ({ meeting }) => {
 
   const [theme, setTheme] = useState(meeting.theme);
   const [oldTheme, setOldTheme] = useState(meeting.theme);
-  const [meetingMemberInvocation, setInvocation] = useState(memberInvocation);
-  const [meetingMemberBenediction, setBenediction] = useState(memberBenediction);
 
   const handleOnThemeChange = (e) => {
     setTheme(e.target.value);
@@ -39,39 +38,6 @@ const SacramentMeetingRow = ({ meeting }) => {
       setOldTheme(newTheme);
       dispatch(updateMeeting({ id: meeting._id, theme: newTheme }));
     }
-  };
-
-  const handleInvocation = (value) => {
-    if (meetingMemberInvocation) {
-      dispatch(updatePrayer({ id: invocation._id, member: value._id }));
-    } else {
-      dispatch(
-        addPrayer({
-          member: value._id,
-          sacramentMeeting: meeting._id,
-          prayerType: "Invocation",
-          date: meeting.date,
-        })
-      );
-    }
-    setInvocation(value);
-  };
-
-  const handleBenediction = (value) => {
-    if (meetingMemberBenediction) {
-      dispatch(updatePrayer({ id: benediction._id, member: value._id }));
-    } else {
-      dispatch(
-        addPrayer({
-          member: value._id,
-          sacramentMeeting: meeting._id,
-          prayerType: "Benediction",
-          date: meeting.date,
-        })
-      );
-    }
-
-    setBenediction(value);
   };
 
   if (isError) {
@@ -100,13 +66,12 @@ const SacramentMeetingRow = ({ meeting }) => {
       </div>
       <div className="sacrament-meeting-details-container">
         <div className="sacrament-meeting-prayer-container">
-          <Prayer
-            members={members}
-            member={meetingMemberInvocation}
-            label="Invocation"
-            onChange={handleInvocation}
-            className=""
-          />
+          <div className="sacrament-meeting-add-talk">
+            <AddPrayer meeting={meeting} type="Invocation" />
+          </div>
+          <div className="sacrament-meeting-prayers">
+            {invocation && <PrayerRow prayer={invocation} member={memberInvocation} />}
+          </div>
         </div>
         <div className="sacrament-meeting-talks-container">
           <div className="sacrament-meeting-add-talk">
@@ -120,13 +85,12 @@ const SacramentMeetingRow = ({ meeting }) => {
           </div>
         </div>
         <div className="sacrament-meeting-prayer-container">
-          <Prayer
-            members={members}
-            member={meetingMemberBenediction}
-            label="Benediction"
-            onChange={handleBenediction}
-            className=""
-          />
+          <div className="sacrament-meeting-add-talk">
+            <AddPrayer meeting={meeting} type="Benediction" />
+          </div>
+          <div className="sacrament-meeting-prayers">
+            {benediction && <PrayerRow prayer={benediction} member={memberBenediction} />}
+          </div>
         </div>
       </div>
     </div>

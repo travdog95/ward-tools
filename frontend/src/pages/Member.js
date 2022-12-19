@@ -70,7 +70,7 @@ const Member = () => {
           </div>
           <div className="profile-inner-container">
             <ProfileForm member={member} />
-            <ProfileDetail memberId={id} />
+            <ProfileDetail memberId={id} member={member} />
           </div>
         </section>
       ) : null}

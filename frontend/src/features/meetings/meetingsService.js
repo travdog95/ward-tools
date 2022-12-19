@@ -111,15 +111,17 @@ const addMeetingsByYear = async (year, token) => {
   return response.data;
 };
 
-//Update Prayer
-const updatePrayer = async (id, prayer, token) => {
+//Delete Prayer
+const deletePrayer = async (prayer, token) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   };
 
-  const response = await axios.put(PRAYERS_API_URL + id, prayer, config);
+  const prayerId = prayer._id;
+
+  const response = await axios.delete(PRAYERS_API_URL + prayerId, config);
 
   return response.data;
 };
@@ -145,7 +147,7 @@ const meetingsService = {
   deleteTalk,
   updateTalk,
   addMeetingsByYear,
-  updatePrayer,
+  deletePrayer,
   addPrayer,
 };
 

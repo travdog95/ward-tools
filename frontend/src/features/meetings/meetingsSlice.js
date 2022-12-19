@@ -14,7 +14,7 @@ const initialState = {
   updatingTalk: false,
   addingMeetings: false,
   addingPrayer: false,
-  updatingPrayer: false,
+  deletingPrayer: false,
   message: "",
   meetings: {
     byId: {},
@@ -55,32 +55,6 @@ export const getMeetings = createAsyncThunk("meetings/getAll", async (params, th
     return thunkAPI.rejectWithValue(message);
   }
 });
-
-// export const getMeetingsByYear = createAsyncThunk("meetings/byYear", async (params, thunkAPI) => {
-//   try {
-//     const token = thunkAPI.getState().auth.user.token;
-//     return await meetingsService.getMeetings(params, token);
-//   } catch (error) {
-//     const message =
-//       (error.response && error.response.data && error.response.data.message) ||
-//       error.message ||
-//       error.toString();
-//     return thunkAPI.rejectWithValue(message);
-//   }
-// });
-
-// export const getMeetingsByMonth = createAsyncThunk("meetings/byMonth", async (params, thunkAPI) => {
-//   try {
-//     const token = thunkAPI.getState().auth.user.token;
-//     return await meetingsService.getMeetings(params, token);
-//   } catch (error) {
-//     const message =
-//       (error.response && error.response.data && error.response.data.message) ||
-//       error.message ||
-//       error.toString();
-//     return thunkAPI.rejectWithValue(message);
-//   }
-// });
 
 export const updateMeeting = createAsyncThunk("meetings/update", async (meeting, thunkAPI) => {
   const id = meeting.id;
@@ -162,16 +136,12 @@ export const addPrayer = createAsyncThunk("meetings/addPrayer", async (prayer, t
   }
 });
 
-export const updatePrayer = createAsyncThunk("meetings/updatePrayer", async (prayer, thunkAPI) => {
-  const id = prayer.id;
+export const deletePrayer = createAsyncThunk("meetings/deletePrayer", async (prayer, thunkAPI) => {
   try {
     const token = thunkAPI.getState().auth.user.token;
-    return await meetingsService.updatePrayer(id, prayer, token);
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) ||
-      error.message ||
-      error.toString();
+    return await meetingsService.deletePrayer(prayer, token);
+  } catch (err) {
+    const message = "";
     return thunkAPI.rejectWithValue(message);
   }
 });
@@ -353,16 +323,21 @@ export const meetingsSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
       })
-      .addCase(updatePrayer.pending, (state, action) => {
+      .addCase(deletePrayer.pending, (state, action) => {
         state.currentPrayerId = action.meta.arg.id;
-        state.updatingPrayer = true;
+        state.deletingPrayer = true;
       })
-      .addCase(updatePrayer.fulfilled, (state, action) => {
-        state.updatingPrayer = false;
+      .addCase(deletePrayer.fulfilled, (state, action) => {
+        const prayerId = action.payload._id;
+        const meetingId = action.payload.sacramentMeeting;
+        state.deletingPrayer = false;
         state.isSuccess = true;
         state.currentPrayerId = 0;
+        state.meetings.byId[meetingId].prayers = state.meetings.byId[meetingId].prayers.filter(
+          (prayer) => prayer._id !== prayerId
+        );
       })
-      .addCase(updatePrayer.rejected, (state, action) => {
+      .addCase(deletePrayer.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

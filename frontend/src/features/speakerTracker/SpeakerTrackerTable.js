@@ -64,6 +64,12 @@ const SpeakerTrackerTable = (props) => {
       headerClassName: "data-grid-header",
     },
     {
+      field: "talkCount",
+      headerName: "Talks Given",
+      width: 100,
+      headerClassName: "data-grid-header",
+    },
+    {
       field: "isWillingToSpeak",
       headerName: "Willing",
       width: 120,

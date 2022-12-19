@@ -23,7 +23,7 @@ const PrayerTrackerTable = (props) => {
     {
       field: "birthDate",
       headerName: "Age",
-      width: 100,
+      width: 75,
       valueFormatter: (params) => {
         return calculateAge(params.value);
       },
@@ -52,6 +52,12 @@ const PrayerTrackerTable = (props) => {
           return "";
         }
       },
+      headerClassName: "data-grid-header",
+    },
+    {
+      field: "prayerCount",
+      headerName: "Prayers Given",
+      width: 120,
       headerClassName: "data-grid-header",
     },
     {

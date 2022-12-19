@@ -8,7 +8,7 @@ import MemberProfileTalk from "../../talks/MemberProfileTalk";
 import MemberProfilePrayer from "../../prayers/MemberProfilePrayer";
 
 const ProfileDetail = (props) => {
-  const { memberId } = props;
+  const { memberId, member } = props;
   // const [value, setValue] = useState(new Date());
 
   // const handleChange = (newValue) => {
@@ -26,7 +26,7 @@ const ProfileDetail = (props) => {
       <div className="info-row">
         <div className="label">Prayers</div>
         <div className="profile-details">
-          <MemberProfilePrayer memberId={memberId} />
+          <MemberProfilePrayer memberId={memberId} member={member} />
         </div>
       </div>
       {/* <div className="info-row">
