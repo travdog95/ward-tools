@@ -15,6 +15,7 @@ import Import from "./pages/Import";
 import ImportPrayers from "./pages/ImportPrayers";
 import SacramentMeetings from "./pages/SacramentMeetings";
 import PrayerTracker from "./pages/PrayerTracker";
+import Missionaries from "./pages/Missionaries";
 
 import { getMembers } from "./features/members/membersSlice";
 import Spinner from "./components/Spinner";
@@ -57,6 +58,7 @@ const App = () => {
             <Route path="/importprayers" element={<ImportPrayers />} />
             <Route path="/sacramentmeetings" element={<SacramentMeetings />} />
             <Route path="/prayers" element={<PrayerTracker />} />
+            <Route path="/missionaries" element={<Missionaries />} />
           </Routes>
         </div>
       </Router>

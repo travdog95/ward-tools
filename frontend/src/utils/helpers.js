@@ -80,7 +80,7 @@ export const calcAndFormatDuration = (date) => {
   let durationFormat = [];
   if (diffDays < 7) {
     durationFormat = ["days"];
-  } else if (diffDays >= 7 && diffDays <= 30) {
+  } else if (diffDays >= 7 && diffDays <= 29) {
     durationFormat = ["weeks", "days"];
   } else {
     durationFormat = ["years", "months"];
