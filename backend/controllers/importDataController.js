@@ -1,9 +1,11 @@
 const asyncHandler = require("express-async-handler");
-const { endOfDay, startOfDay, parseISO } = require("date-fns");
+const { endOfDay, startOfDay, parseISO, isSunday } = require("date-fns");
 
+const { SHORT_MONTHS } = require("../config/constants");
 const Member = require("../models/memberModel");
 const SacramentMeeting = require("../models/sacramentMeetingModel");
 const Talk = require("../models/talkModel");
+const Prayer = require("../models/prayerModel");
 
 // @desc    Import Speaker Data
 // @router  POST /api/importData/speakerData
@@ -40,7 +42,9 @@ const importSpeakerData = asyncHandler(async (req, res) => {
         membersNotFound.push(`${firstName} ${lastName}`);
       } else {
         const year = speaker.Date.substring(speaker.Date.lastIndexOf("/") + 1);
+
         const month = speaker.Date.substring(0, speaker.Date.indexOf("/")).padStart(2, "0");
+
         const day = speaker.Date.substring(
           speaker.Date.indexOf("/") + 1,
           speaker.Date.lastIndexOf("/")
@@ -87,6 +91,109 @@ const importSpeakerData = asyncHandler(async (req, res) => {
   });
 });
 
+// @desc    Import Prayer Data
+// @router  POST /api/importData/prayerData
+// @access  Private
+const importPrayerData = asyncHandler(async (req, res) => {
+  const data = req.body;
+  const prayersCreated = [];
+  const meetingsCreated = [];
+  const errorsCreatingMeetings = [];
+  const errorsCreatingPrayers = [];
+
+  if (!data || Object.keys(data).length === 0) {
+    res.status(400);
+    throw new Error("Please include data.");
+  }
+
+  await Promise.all(
+    data.map(async (row) => {
+      //find member
+      const member = await Member.findOne({ preferredName: row.Name });
+
+      row.memberMatch = member ? member._id : "no member match";
+
+      if (member) {
+        // let prayerDates = [];
+        for (let i = 1; i <= row.Count; i++) {
+          //Format date
+          const year = parseInt(row[i].substring(row[i].lastIndexOf("-") + 1)) + 2000;
+
+          const monthAbbreviation = row[i].substring(
+            row[i].indexOf("-") + 1,
+            row[i].lastIndexOf("-")
+          );
+          const month = SHORT_MONTHS.indexOf(monthAbbreviation);
+
+          const day = parseInt(row[i].substring(0, row[i].indexOf("-")));
+
+          const prayerDate = new Date(year, month, day);
+          const formattedPrayerDate = `${year}-${month + 1}-${day}`;
+
+          // Find sacrament meeting
+          const meeting = await SacramentMeeting.findOne({
+            date: {
+              $gte: startOfDay(prayerDate),
+              $lte: endOfDay(prayerDate),
+            },
+          });
+
+          //Determine prayer type
+          const prayerType = meeting.prayers.length > 0 ? "Benediction" : "Invocation";
+
+          //Load data for prayer
+          let newPrayer = {
+            member: member._id,
+            date: prayerDate,
+            prayerType,
+          };
+
+          //Load meeting
+          if (meeting) {
+            newPrayer.sacramentMeeting = meeting._id;
+          } else {
+            // //create new meeting
+            // const newMeeting = await SacramentMeeting.create({
+            //   date: prayerDate,
+            // });
+
+            // if (!newMeeting) {
+            //   errorsCreatingMeetings.push(formattedPrayerDate);
+            // } else {
+            //   newPrayer.sacramentMeeting = newMeeting._id;
+            //   meetingsCreated.push(formattedPrayerDate);
+            // }
+            meetingsCreated.push(formattedPrayerDate);
+          }
+
+          //Add prayer
+          const addPrayer = await Prayer.create(newPrayer);
+
+          if (addPrayer) {
+            prayersCreated.push(formattedPrayerDate);
+          } else {
+            errorsCreatingPrayers.push(formattedPrayerDate);
+          }
+
+          // prayerDates.push(meetingMatch);
+        }
+
+        // row.prayerDates = prayerDates;
+
+        return row;
+      } //End if (member)
+    })
+  );
+  res.status(201).json({
+    messsage: "Prayers imported completed successfully!",
+    meetingsCreated,
+    errorsCreatingMeetings,
+    prayersCreated,
+    errorsCreatingPrayers,
+  });
+});
+
 module.exports = {
   importSpeakerData,
+  importPrayerData,
 };

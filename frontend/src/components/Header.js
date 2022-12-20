@@ -22,7 +22,7 @@ const Header = () => {
       {user ? (
         <>
           <div className="logo">
-            <Link to="/prayers">Prayers</Link>
+            <Link to="/prayers">Prayer Tracker</Link>
           </div>
           <div className="logo">
             <Link to="/sacramentmeetings">Sacrament Meetings</Link>

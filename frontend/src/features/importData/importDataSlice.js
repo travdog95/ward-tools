@@ -7,6 +7,7 @@ const initialState = {
   isLoading: false,
   message: "",
   speakerData: { membersNotFound: [], newTalks: [], meetingsCreated: [] },
+  prayerData: {},
 };
 
 export const importSpeakerData = createAsyncThunk(
@@ -15,6 +16,22 @@ export const importSpeakerData = createAsyncThunk(
     try {
       const token = thunkAPI.getState().auth.user.token;
       return await importDataService.importSpeakerData(data, token);
+    } catch (error) {
+      const message =
+        (error.response && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const importPrayerData = createAsyncThunk(
+  "importData/prayerData",
+  async (data, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await importDataService.importPrayerData(data, token);
     } catch (error) {
       const message =
         (error.response && error.response.data && error.response.data.message) ||
@@ -43,6 +60,19 @@ export const importDataSlice = createSlice({
         state.speakerData = action.payload;
       })
       .addCase(importSpeakerData.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(importPrayerData.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(importPrayerData.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.prayerData = action.payload;
+      })
+      .addCase(importPrayerData.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

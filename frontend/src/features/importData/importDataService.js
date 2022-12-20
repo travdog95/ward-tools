@@ -15,7 +15,20 @@ const importSpeakerData = async (data, token) => {
   return response.data;
 };
 
+//Import Prayer Data
+const importPrayerData = async (data, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.post(API_URL + "prayerData", data, config);
+
+  return response.data;
+};
+
 const importDataService = {
+  importPrayerData,
   importSpeakerData,
 };
 

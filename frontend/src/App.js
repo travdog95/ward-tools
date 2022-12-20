@@ -12,6 +12,7 @@ import DataFiles from "./pages/DataFiles";
 import WardList from "./pages/WardList";
 import Member from "./pages/Member";
 import Import from "./pages/Import";
+import ImportPrayers from "./pages/ImportPrayers";
 import SacramentMeetings from "./pages/SacramentMeetings";
 import PrayerTracker from "./pages/PrayerTracker";
 
@@ -53,6 +54,7 @@ const App = () => {
             <Route path="/member/:id" element={<Member />} />
             <Route path="/member" element={<Member />} />
             <Route path="/import" element={<Import />} />
+            <Route path="/importprayers" element={<ImportPrayers />} />
             <Route path="/sacramentmeetings" element={<SacramentMeetings />} />
             <Route path="/prayers" element={<PrayerTracker />} />
           </Routes>
