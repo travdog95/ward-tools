@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import Spinner from "../components/Spinner";
-import { uploadFile, reset, getFiles } from "../features/fileManagement/fileSlice";
+import { uploadFile } from "../features/fileManagement/fileSlice";
 import SelectedFile from "../features/fileManagement/components/SelectedFile";
 import UploadFileButton from "../features/fileManagement/components/UploadFileButton";
 import FilesTable from "../features/fileManagement/components/FilesTable";
@@ -16,9 +16,8 @@ const DataFiles = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { files, isLoading, isError, message, isSuccess, previewFile } = useSelector(
-    (state) => state.fileManagement
-  );
+  const { files, isLoading, isError, message, isSuccess, previewFile, fileInformation } =
+    useSelector((state) => state.fileManagement);
 
   const { user } = useSelector((state) => state.auth);
 
@@ -35,20 +34,21 @@ const DataFiles = () => {
       navigate("/login");
     }
 
-    dispatch(getFiles());
+    // dispatch(getFiles());
 
-    return () => {
-      dispatch(reset());
-    };
-  }, [user, navigate, message, isError, dispatch, isSuccess]);
+    // return () => {
+    //   dispatch(reset());
+    // };
+  }, [user, navigate, message, isError, isSuccess]);
 
   const handleFileChange = (event) => {
     // Update the state
     setSelectedFile(event.target.files[0]);
   };
 
-  const handleUploadFile = async (e) => {
+  const handleUploadFile = (e) => {
     e.preventDefault();
+
     // Create an object of formData
     const formData = new FormData();
 
@@ -87,7 +87,7 @@ const DataFiles = () => {
         </form>
       </div>
       {selectedFile ? <SelectedFile data={selectedFile} /> : null}
-      <FilesTable files={files} />
+      <FilesTable files={files} fileInformation={fileInformation} />
       {previewFile.data.length > 0 ? <PreviewFile file={previewFile} /> : null}
     </>
   );

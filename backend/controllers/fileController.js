@@ -3,6 +3,7 @@ const fs = require("fs");
 const url = require("url");
 const { UPLOAD_DIR } = require("../config/constants");
 const Member = require("../models/memberModel");
+const FileInfo = require("../models/fileInformationModel");
 
 const getMemberId = (url) => {
   let memberId = 0;
@@ -71,8 +72,10 @@ const getFile = asyncHandler(async (req, res) => {
 // @desc    Add file
 // @router  POST /api/files
 // @access  Private
-const uploadFile = asyncHandler(async (req, res, next) => {
+const uploadFile = asyncHandler(async (req, res) => {
   const uploadData = req.file;
+
+  const newFileInfo = await FileInfo.create(uploadData);
 
   res.status(200).json(uploadData);
 });

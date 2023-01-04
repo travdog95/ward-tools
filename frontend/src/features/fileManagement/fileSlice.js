@@ -10,8 +10,12 @@ const initialState = {
   isError: false,
   isSuccess: false,
   isLoading: false,
+  addingFileInfo: false,
   message: "",
   files: [],
+  byId: {},
+  allIds: [],
+  fileInformation: [],
 };
 
 export const uploadFile = createAsyncThunk(
@@ -30,6 +34,16 @@ export const getFiles = createAsyncThunk("files/getAll", async (_, thunkAPI) => 
   try {
     const token = thunkAPI.getState().auth.user.token;
     return await fileManagementService.getFiles(token);
+  } catch (err) {
+    const message = "";
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
+export const getFileInfo = createAsyncThunk("fileInfo/getAll", async (_, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState().auth.user.token;
+    return await fileManagementService.getFileInfo(token);
   } catch (err) {
     const message = "";
     return thunkAPI.rejectWithValue(message);
@@ -69,20 +83,24 @@ export const importDataFile = createAsyncThunk("files/import", async (file, thun
   }
 });
 
+export const addFileInfo = createAsyncThunk("fileInfo/add", async (fileInfo, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState().auth.user.token;
+    return await fileManagementService.addFileInfo(fileInfo, token);
+  } catch (err) {
+    const message =
+      (err.response && err.response.data && err.response.data.message) ||
+      err.message ||
+      err.toString();
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
 export const fileManagementSlice = createSlice({
   name: "fileManagement",
   initialState,
   reducers: {
-    reset: (state) => {
-      state.isError = false;
-      state.isSuccess = false;
-      state.isLoading = false;
-      state.isFileUploaded = false;
-      state.isFileDeleted = false;
-      state.message = "";
-      state.files = [];
-      // state.previewFile = {};
-    },
+    reset: (state) => initialState,
   },
   //Asynchronous functions using thunk
   extraReducers: (builder) => {
@@ -92,12 +110,13 @@ export const fileManagementSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(uploadFile.fulfilled, (state, action) => {
+        const filename = action.payload.filename;
         state.isLoading = false;
         state.isSuccess = true;
-        state.file = action.payload.filename;
-        state.files.push(action.payload.filename);
+        state.file = action.payload;
+        state.files.push(filename);
         state.message = "File uploaded successfully!";
-        state.previewFile = { fileName: "", data: [] };
+        // state.previewFile = { fileName: "", data: [] };
       })
       .addCase(uploadFile.rejected, (state, action) => {
         state.isLoading = false;
@@ -161,6 +180,19 @@ export const fileManagementSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
         state.file = null;
+      })
+      .addCase(addFileInfo.pending, (state) => {
+        state.addingFileInfo = true;
+      })
+      .addCase(addFileInfo.fulfilled, (state, action) => {
+        state.addingFileInfo = false;
+        state.isSuccess = true;
+        state.message = "FileInfo added successfully!";
+      })
+      .addCase(addFileInfo.rejected, (state, action) => {
+        state.addingFileInfo = false;
+        state.isError = true;
+        state.message = action.payload;
       });
   },
 });

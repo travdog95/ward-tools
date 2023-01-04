@@ -2,6 +2,7 @@
 import axios from "axios";
 
 const API_URL = "/api/files/";
+const FILE_INFO_URL = "/api/fileinfo/";
 
 //Upload file
 const upload = async (formData, config) => {
@@ -18,6 +19,30 @@ const getFiles = async (token) => {
     },
   };
   const response = await axios.get(API_URL, config);
+
+  return response.data;
+};
+
+//Get FileInfo
+const getFileInfo = async (token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.get(FILE_INFO_URL, config);
+
+  return response.data;
+};
+
+//Add FileInfo
+const addFileInfo = async (fileInfo, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.post(FILE_INFO_URL, fileInfo, config);
 
   return response.data;
 };
@@ -65,6 +90,8 @@ const fileManagementService = {
   deleteFile,
   preview,
   importData,
+  addFileInfo,
+  getFileInfo,
 };
 
 export default fileManagementService;
